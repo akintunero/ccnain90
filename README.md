@@ -164,6 +164,22 @@ Suggested progression: labs **46–50** are design‑heavy and intended to stret
 
 ---
 
+### Advanced Projects – Advanced Scenario Labs
+
+- **Directory**: [`advanced-projects`](./advanced-projects/)
+- **Focus**:
+  - 50 optional project style labs that revisit core enterprise topics (architecture, virtualization, infrastructure, network assurance, security, and automation).
+  - Larger, real life scenarios that expect you to design, plan, and troubleshoot at an advanced level rather than follow short, guided steps.
+- **Use case examples**:
+  - Multi site campus and WAN designs.
+  - VRF and tunneling projects for multi tenant environments.
+  - End to end infrastructure and assurance exercises that combine routing, wireless, and IP services.
+  - Security hardening and automation initiatives that feel close to real enterprise work.
+
+You can work through these projects after the main 50 CCNA labs when you are ready for deeper design and troubleshooting practice.
+
+---
+
 ## How to Use This Repository
 
 - **For self‑study**
@@ -193,4 +209,6 @@ Suggested progression: labs **46–50** are design‑heavy and intended to stret
 - As you complete labs, consider maintaining your own notes or a separate branch with your device configurations and additional commentary.
 
 This structure is intentionally designed to mirror a **professional network engineering academy**: every lab expects not just CLI work, but also **clear documentation, verification, failure testing, and reflection**. 
+
+
 
