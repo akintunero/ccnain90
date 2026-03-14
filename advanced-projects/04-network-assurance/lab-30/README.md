@@ -16,7 +16,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Topics in Scope
 
-This project draws from the Network Assurance section of the syllabus (4.x):
+This project draws from the Network Assurance section:
 
 - **4.1 Problem diagnosis tools** – Ping, traceroute, debugs, SNMP, and syslog in a repeatable sequence.  
 - **4.2 Flexible NetFlow** – As a standard way to observe traffic patterns.  

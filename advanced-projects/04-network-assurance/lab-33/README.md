@@ -20,7 +20,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Topics in Scope
 
-This project draws from the Network Assurance syllabus (4.x) in a synthesised way:
+This project draws from the Network Assurance  (4.x) in a synthesised way:
 
 - **4.1–4.4** – Using diagnostics, NetFlow, SPAN/RSPAN, and IPSLA as data sources.  
 - **4.5–4.6** – Leveraging controllers and APIs to feed and maintain dashboards.

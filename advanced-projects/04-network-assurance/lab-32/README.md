@@ -20,7 +20,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Topics in Scope
 
-This project draws from the Network Assurance section of the syllabus (4.x):
+This project draws from the Network Assurance section:
 
 - **4.5 Cisco Catalyst Center workflows** – Applying configuration, monitoring, and management using traditional and AI-powered workflows.  
 - **4.6 Model-driven interfaces** – Configuring and verifying NETCONF and RESTCONF for programmatic monitoring and configuration.  

@@ -20,7 +20,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Topics in Scope
 
-This project draws from the Network Assurance section of the syllabus (4.x):
+This project draws from the Network Assurance section:
 
 - **4.2 Flexible NetFlow** – Designing export points and record types for key services.  
 - **4.3 Traffic mirroring** – SPAN, RSPAN, and ERSPAN usage for packet analysis.  
