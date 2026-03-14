@@ -1,113 +1,99 @@
-## Advanced Infrastructure Lab 14 – End-to-End Enterprise Services Design
+## Advanced Infrastructure Lab 19 – Designing a Simple but Robust eBGP Edge
 
 ### Scenario
-Your company is modernising its enterprise network. The environment includes:
+Your enterprise currently connects to a single ISP using static default routes on a WAN edge router. As the number of sites and services has grown, limitations of this approach are becoming clear:
 
-- A main campus with several wiring closets.
-- A datacentre hosting internal applications.
-- A small disaster recovery site.
-- A single ISP for internet and partner connectivity.
+- Failures at the ISP edge are hard to diagnose without visibility into BGP.  
+- Engineers want the option to advertise specific prefixes in future (for example for VPNs or partner links).  
+- There is interest in adding a second ISP for resilience, but the team has little eBGP experience.
 
-The current design has grown organically. There are inconsistent trunk configurations, spanning tree issues, and a mix of static and dynamic routing. Wireless has been added in a piecemeal way and IP services such as NTP and NAT are not centrally planned.
-
-You have been asked to propose a cohesive **Layer 2, Layer 3, wireless, and IP services** infrastructure that aligns with best practices and prepares the network for future growth.
+In this lab you will design a **basic eBGP edge** between your network and one ISP that remains easy to operate and supports future growth. Internal routing should stay simple (for example OSPF inside, eBGP only at the edge).
 
 ### Project Objectives
 
 By the end of this project you should be able to:
 
-- Describe a stable Layer 2 and Layer 3 design for the campus and datacentre.  
-- Show how OSPF and eBGP will be used for internal and external routing.  
-- Explain how wireless access points discover and join controllers and how clients roam.  
-- Plan key IP services such as NTP, NAT/PAT, first hop redundancy, and multicast where appropriate.
+- Describe a simple eBGP design between a single enterprise edge and a directly connected ISP.  
+- Decide which prefixes to advertise and how to control what you accept from the ISP.  
+- Explain how internal routing (for example OSPF) and eBGP interact at the edge.  
+- Outline how your design could evolve to support a second ISP later.
 
 ### Technologies and Design Topics in Scope
 
-This project draws from the ENCOR Infrastructure section:
+This project draws from the Infrastructure section of the syllabus (3.x), especially:
 
-- **Layer 2**
-  - 802.1Q trunking, static and dynamic EtherChannel.
-  - Spanning tree (RSTP and MST) for loop free redundancy.
-- **Layer 3**
-  - OSPF design for multiple areas, summarisation, and filtering.
-  - Conceptual comparison with EIGRP.
-  - Basic eBGP to an ISP using directly connected neighbours.
-- **Wireless**
-  - RF basics, AP modes, antenna types.
-  - AP discovery and join process.
-  - Layer 2 and Layer 3 roaming principles.
-  - Troubleshooting client connectivity at a high level.
-- **IP Services**
-  - NTP design.
-  - NAT/PAT for internet access.
-  - First hop redundancy protocols such as HSRP or VRRP.
-  - Multicast concepts (PIM and IGMP).
+- **3.2 Layer 3**
+  - 3.2.c Configuring and verifying eBGP between directly connected neighbours (best-path selection algorithm and neighbour relationships).  
+  - 3.2.b Use of OSPFv2/v3 internally as a reference internal protocol redistributing towards the edge.  
+- **3.3 IP services (context)**
+  - NAT/PAT and first-hop redundancy placement at or near the edge.
 
 ### Project Tasks
 
-1. **Stabilise Layer 2**
-   - Choose a spanning tree mode (for example RSTP or MST) for the campus.  
-   - Define which switches act as primary and secondary roots for each VLAN or instance.  
-   - Decide where EtherChannels are appropriate and how they will be configured.
-2. **Design Layer 3 routing**
-   - Plan OSPF areas for campus, datacentre, and DR site.  
-   - Decide where summarisation will occur to reduce routing table size.  
-   - Identify where eBGP will be used to connect to the ISP and how routes will be exchanged.
-3. **Plan wireless infrastructure**
-   - Select AP deployment model (centralised controller, distributed, or branch friendly).  
-   - Describe how APs will discover and join controllers.  
-   - Define roaming behaviour between access points and across subnets.
-4. **Define IP services**
-   - Choose authoritative NTP sources and describe the NTP hierarchy.  
-   - Design NAT/PAT at the edge, including which internal ranges will be translated.  
-   - Decide which VLANs will use first hop redundancy and where the active gateways will live.  
-   - Identify any multicast use cases and where PIM or IGMP would be required.
-5. **Document the end-to-end flow**
-   - For a typical user, describe the full path of traffic from wireless or wired access through the campus, to datacentre applications, and out to the internet.
+1. **Define edge roles and routing domains**
+   - Identify which router(s) will run eBGP with the ISP.  
+   - Decide where the boundary between internal routing (for example OSPF) and external eBGP will sit.  
+   - List the internal prefixes that may need internet or partner connectivity.
+2. **Design eBGP neighbour relationships**
+   - Specify IP addressing for the link between your edge router and the ISP (for example a /30 or /31).  
+   - Define eBGP neighbour configuration basics (ASN values, update-source, timers if needed).  
+   - Decide what you will accept from the ISP (for example a default route only, or selected prefixes).
+3. **Plan route advertisement and redistribution**
+   - Choose which internal prefixes will be advertised to the ISP (for example an aggregate for all internal networks).  
+   - Decide whether internal OSPF routes will be summarised before being redistributed into eBGP.  
+   - Describe how the edge router will learn internal routes (for example via OSPF adjacency or static routes).
+4. **Consider scale and second-ISP readiness**
+   - Briefly discuss how a future second ISP would connect (for example second eBGP neighbour on another router).  
+   - Outline how you might use local preference, AS-path prepending, or MED in a dual-ISP design.  
+   - Note any additional monitoring or logging you would put in place at the edge.
+5. **Document operational checks**
+   - Create a short checklist of commands and metrics to verify that eBGP and internal routing are working:
+     - BGP neighbour state.  
+     - Received and advertised routes.  
+     - Default route presence on key internal routers.  
+   - Include guidance for what to check first if users report loss of internet connectivity.
 
 ### Design Diagram (Text Form)
 
-Use this to build a logical diagram:
+Use this to sketch a routing and edge view:
 
-- **Campus**  
-  - Access switches connecting wired users and APs.  
-  - Distribution or core switches providing routing, with redundant links.  
-  - VLANs and SVIs for different user and server segments.
-- **Datacentre and DR**
-  - Routers or layer 3 switches connecting into the OSPF domain.  
-  - Optional separate area numbers and summarisation boundaries.
-- **Edge and ISP**
-  - WAN edge router(s) that run eBGP with the ISP.  
-  - NAT and first hop redundancy located here or on the core, depending on your design.
+- **Internal domain**
+  - Core or distribution routers running OSPF, summarising towards the edge.  
+- **Edge router**
+  - Interfaces facing the internal core and the ISP.  
+  - eBGP neighbour relationship to the ISP, with notes on ASN and key policies.  
+- **ISP cloud**
+  - A simple representation of the ISP network from which you receive a default or limited set of routes.
 
 ### Failure and What-If Analysis
 
-Consider:
+Consider and describe behaviour under these conditions:
 
-- Spanning tree root failure in the main campus.  
-- Loss of an EtherChannel link bundle.  
-- OSPF adjacency failure between campus and datacentre.  
-- eBGP neighbour failure to the ISP.
+- The eBGP session to the ISP drops but the physical link stays up.  
+- The edge router loses OSPF adjacency to the internal core but eBGP remains up.  
+- A misconfiguration causes more specific internal prefixes to be advertised than intended.  
+- The ISP begins advertising a full table unexpectedly instead of a default route.
 
-For each, describe:
+For each scenario, explain:
 
-- Expected network behaviour.  
-- How users are impacted.  
-- Which design choices help contain or minimise the issue.
+- How routing changes on the edge and in the internal network.  
+- Which alarms, logs, or metrics would reveal the issue.  
+- What configuration safeguards (for example prefix-lists, max-prefix, or route-maps) you would use to reduce risk.
 
 ### Expected Outcomes
 
 After completing this project you should be able to:
 
-- Explain your Layer 2 and Layer 3 design decisions to another engineer.  
-- Show how wireless, IP services, and routing work together to support applications.  
-- Identify where further improvements such as additional redundancy or better summarisation might be useful.
+- Describe and justify a minimal yet robust eBGP edge design for a single ISP.  
+- Explain how internal OSPF and external BGP work together without unnecessary complexity.  
+- Identify key safeguards and checks that should be in place at any enterprise internet edge.
 
 ### Reflection
 
 Reflect on:
 
-- Which parts of the infrastructure design were most constrained by existing hardware or topology.  
-- How you could phase the migration from the current state to your target design with minimal downtime.  
-- Which assurance and monitoring tools you would rely on during and after the migration.
+- How much BGP complexity your environment actually needs today versus in the future.  
+- Which aspects of BGP you would prioritise for deeper study based on this design.  
+- How you would explain your edge routing approach to a security or operations team.
+
 

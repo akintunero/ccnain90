@@ -1,113 +1,98 @@
-## Advanced Infrastructure Lab 14 – End-to-End Enterprise Services Design
+## Advanced Infrastructure Lab 18 – Choosing Between EIGRP and OSPF
 
 ### Scenario
-Your company is modernising its enterprise network. The environment includes:
+Your enterprise network currently uses a mixture of EIGRP and OSPF inherited from previous mergers:
 
-- A main campus with several wiring closets.
-- A datacentre hosting internal applications.
-- A small disaster recovery site.
-- A single ISP for internet and partner connectivity.
+- The campus core and access use OSPF in a single area.  
+- The datacentre team prefers EIGRP and runs it internally.  
+- The DR site connects over a WAN that was built with EIGRP as the primary protocol.  
 
-The current design has grown organically. There are inconsistent trunk configurations, spanning tree issues, and a mix of static and dynamic routing. Wireless has been added in a piecemeal way and IP services such as NTP and NAT are not centrally planned.
-
-You have been asked to propose a cohesive **Layer 2, Layer 3, wireless, and IP services** infrastructure that aligns with best practices and prepares the network for future growth.
+As the network grows, operational complexity and confusion are increasing. Different teams favour different protocols, and there is no clear rationale for where each belongs. Leadership has asked you to **compare EIGRP and OSPF in the context of your design** and recommend a protocol strategy for campus, datacentre, DR, and WAN.
 
 ### Project Objectives
 
 By the end of this project you should be able to:
 
-- Describe a stable Layer 2 and Layer 3 design for the campus and datacentre.  
-- Show how OSPF and eBGP will be used for internal and external routing.  
-- Explain how wireless access points discover and join controllers and how clients roam.  
-- Plan key IP services such as NTP, NAT/PAT, first hop redundancy, and multicast where appropriate.
+- Compare how EIGRP and OSPF behave in terms of convergence, load balancing, and scalability.  
+- Decide which parts of the network should standardise on which protocol (if any mix remains).  
+- Identify where redistribution between EIGRP and OSPF is required and what risks it introduces.  
+- Explain your routing protocol decisions to both technical and non-technical stakeholders.
 
 ### Technologies and Design Topics in Scope
 
-This project draws from the ENCOR Infrastructure section:
+This project draws from the Infrastructure section of the syllabus (3.x), with emphasis on Layer 3:
 
-- **Layer 2**
-  - 802.1Q trunking, static and dynamic EtherChannel.
-  - Spanning tree (RSTP and MST) for loop free redundancy.
-- **Layer 3**
-  - OSPF design for multiple areas, summarisation, and filtering.
-  - Conceptual comparison with EIGRP.
-  - Basic eBGP to an ISP using directly connected neighbours.
-- **Wireless**
-  - RF basics, AP modes, antenna types.
-  - AP discovery and join process.
-  - Layer 2 and Layer 3 roaming principles.
-  - Troubleshooting client connectivity at a high level.
-- **IP Services**
-  - NTP design.
-  - NAT/PAT for internet access.
-  - First hop redundancy protocols such as HSRP or VRRP.
-  - Multicast concepts (PIM and IGMP).
+- **3.2 Layer 3**
+  - 3.2.a Comparing routing concepts of EIGRP and OSPF (advanced distance vector vs link state, load balancing, path selection, metrics, and area types).  
+  - 3.2.b Simple OSPFv2/v3 environments used as a reference when weighing protocol trade-offs.  
 
 ### Project Tasks
 
-1. **Stabilise Layer 2**
-   - Choose a spanning tree mode (for example RSTP or MST) for the campus.  
-   - Define which switches act as primary and secondary roots for each VLAN or instance.  
-   - Decide where EtherChannels are appropriate and how they will be configured.
-2. **Design Layer 3 routing**
-   - Plan OSPF areas for campus, datacentre, and DR site.  
-   - Decide where summarisation will occur to reduce routing table size.  
-   - Identify where eBGP will be used to connect to the ISP and how routes will be exchanged.
-3. **Plan wireless infrastructure**
-   - Select AP deployment model (centralised controller, distributed, or branch friendly).  
-   - Describe how APs will discover and join controllers.  
-   - Define roaming behaviour between access points and across subnets.
-4. **Define IP services**
-   - Choose authoritative NTP sources and describe the NTP hierarchy.  
-   - Design NAT/PAT at the edge, including which internal ranges will be translated.  
-   - Decide which VLANs will use first hop redundancy and where the active gateways will live.  
-   - Identify any multicast use cases and where PIM or IGMP would be required.
-5. **Document the end-to-end flow**
-   - For a typical user, describe the full path of traffic from wireless or wired access through the campus, to datacentre applications, and out to the internet.
+1. **Document the current protocol landscape**
+   - Identify where OSPF is running today (areas, key routers, and major prefixes).  
+   - Identify where EIGRP is running (autonomous systems, major route domains).  
+   - Note any existing redistribution points and which routes are exchanged.
+2. **Analyse design requirements per domain**
+   - For the campus, list requirements such as fast convergence, support for multiple areas, and ease of operations.  
+   - For the datacentre, consider multi-path capabilities, summarisation, and future overlay plans.  
+   - For DR and WAN, consider link quality, bandwidth, and manageability.
+3. **Compare EIGRP and OSPF against those requirements**
+   - For each domain (campus, datacentre, DR/WAN), evaluate:
+     - Convergence characteristics.  
+     - Metric flexibility and path control.  
+     - Operational familiarity of the team.  
+   - Summarise pros and cons of using a single protocol everywhere versus a mixed approach.
+4. **Propose a routing protocol strategy**
+   - Decide if the network should converge on OSPF, converge on EIGRP, or retain a mix with clear boundaries.  
+   - Define where any redistribution will occur and which direction(s) routes should flow.  
+   - Outline summarisation points to keep routing tables manageable across protocol boundaries.
+5. **Plan validation and transition**
+   - Describe how you would test your proposed protocol strategy in a lab or pilot environment.  
+   - Provide a high-level sequence of steps to migrate from the current state to your target design.  
+   - Include checkpoints where you verify reachability and route correctness.
 
 ### Design Diagram (Text Form)
 
-Use this to build a logical diagram:
+Use this to create a routing-protocol view of the network:
 
-- **Campus**  
-  - Access switches connecting wired users and APs.  
-  - Distribution or core switches providing routing, with redundant links.  
-  - VLANs and SVIs for different user and server segments.
-- **Datacentre and DR**
-  - Routers or layer 3 switches connecting into the OSPF domain.  
-  - Optional separate area numbers and summarisation boundaries.
-- **Edge and ISP**
-  - WAN edge router(s) that run eBGP with the ISP.  
-  - NAT and first hop redundancy located here or on the core, depending on your design.
+- **Campus block**
+  - Core and distribution routers, showing which protocol they run and how they connect to the backbone.  
+- **Datacentre block**
+  - Internal routing domain and its connection(s) to the core.  
+- **DR and WAN block**
+  - Edge routers, WAN links, and which routing protocol runs over those links.  
+- **Redistribution points**
+  - Routers that exchange routes between EIGRP and OSPF, with notes on direction and summarisation.
 
 ### Failure and What-If Analysis
 
-Consider:
+Consider these scenarios and describe the impact on your design:
 
-- Spanning tree root failure in the main campus.  
-- Loss of an EtherChannel link bundle.  
-- OSPF adjacency failure between campus and datacentre.  
-- eBGP neighbour failure to the ISP.
+- A redistribution router between EIGRP and OSPF fails.  
+- A route leak occurs because redistribution was configured too broadly.  
+- An OSPF area is added in the campus without updating the protocol strategy.  
+- A new remote site is connected and engineers must decide which protocol to use.
 
-For each, describe:
+For each case, explain:
 
-- Expected network behaviour.  
-- How users are impacted.  
-- Which design choices help contain or minimise the issue.
+- How routes will change and which parts of the network may be affected.  
+- What metrics, tags, or summarisation techniques you would use to limit problems.  
+- How your chosen strategy makes these issues easier or harder to manage.
 
 ### Expected Outcomes
 
 After completing this project you should be able to:
 
-- Explain your Layer 2 and Layer 3 design decisions to another engineer.  
-- Show how wireless, IP services, and routing work together to support applications.  
-- Identify where further improvements such as additional redundancy or better summarisation might be useful.
+- Clearly articulate why EIGRP, OSPF, or a specific combination is appropriate for each part of your network.  
+- Identify and mitigate the main risks associated with protocol mixing and redistribution.  
+- Provide a concise recommendation that network leadership can approve.
 
 ### Reflection
 
 Reflect on:
 
-- Which parts of the infrastructure design were most constrained by existing hardware or topology.  
-- How you could phase the migration from the current state to your target design with minimal downtime.  
-- Which assurance and monitoring tools you would rely on during and after the migration.
+- Whether your organisation benefits more from protocol diversity or from standardisation.  
+- How you would document your routing protocol choices so that future engineers understand the rationale.  
+- What additional labs or testing you would run before committing to a long-term protocol strategy.
+
 

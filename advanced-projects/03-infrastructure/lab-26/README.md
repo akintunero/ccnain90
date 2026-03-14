@@ -1,113 +1,93 @@
-## Advanced Infrastructure Lab 14 – End-to-End Enterprise Services Design
+## Advanced Infrastructure Lab 26 – Multicast Design and RPF Considerations
 
 ### Scenario
-Your company is modernising its enterprise network. The environment includes:
+Your organisation is planning to introduce multicast-based services such as:
 
-- A main campus with several wiring closets.
-- A datacentre hosting internal applications.
-- A small disaster recovery site.
-- A single ISP for internet and partner connectivity.
+- Live video streams for internal town halls.  
+- Market data feeds for a trading or analytics team.  
+- Multicast-based application updates or telemetry.  
 
-The current design has grown organically. There are inconsistent trunk configurations, spanning tree issues, and a mix of static and dynamic routing. Wireless has been added in a piecemeal way and IP services such as NTP and NAT are not centrally planned.
-
-You have been asked to propose a cohesive **Layer 2, Layer 3, wireless, and IP services** infrastructure that aligns with best practices and prepares the network for future growth.
+Today the network primarily carries unicast traffic, and multicast is either disabled or inconsistently configured. There is concern about flooding, potential loops, and the impact on existing routing. In this lab you will design where and how multicast protocols such as PIM and IGMP should be used, and how Reverse Path Forwarding (RPF) checks will behave in your topology.
 
 ### Project Objectives
 
 By the end of this project you should be able to:
 
-- Describe a stable Layer 2 and Layer 3 design for the campus and datacentre.  
-- Show how OSPF and eBGP will be used for internal and external routing.  
-- Explain how wireless access points discover and join controllers and how clients roam.  
-- Plan key IP services such as NTP, NAT/PAT, first hop redundancy, and multicast where appropriate.
+- Decide which parts of the network should support multicast and which should remain unicast-only.  
+- Select appropriate multicast routing modes (for example PIM Sparse Mode) and where to run them.  
+- Explain how RPF checks work in your design and how routing choices affect multicast forwarding.  
+- Identify potential risks and safeguards when enabling multicast in an existing network.
 
 ### Technologies and Design Topics in Scope
 
-This project draws from the ENCOR Infrastructure section:
+This project focuses on the multicast-related portion of the Infrastructure syllabus (3.3):
 
-- **Layer 2**
-  - 802.1Q trunking, static and dynamic EtherChannel.
-  - Spanning tree (RSTP and MST) for loop free redundancy.
-- **Layer 3**
-  - OSPF design for multiple areas, summarisation, and filtering.
-  - Conceptual comparison with EIGRP.
-  - Basic eBGP to an ISP using directly connected neighbours.
-- **Wireless**
-  - RF basics, AP modes, antenna types.
-  - AP discovery and join process.
-  - Layer 2 and Layer 3 roaming principles.
-  - Troubleshooting client connectivity at a high level.
-- **IP Services**
-  - NTP design.
-  - NAT/PAT for internet access.
-  - First hop redundancy protocols such as HSRP or VRRP.
-  - Multicast concepts (PIM and IGMP).
+- **3.3 IP services**
+  - 3.3.d Describing multicast protocols such as RPF check, PIM SM, IGMP v2/v3, SSM, bidirectional PIM, and MSDP (at a design and behaviour level).  
 
 ### Project Tasks
 
-1. **Stabilise Layer 2**
-   - Choose a spanning tree mode (for example RSTP or MST) for the campus.  
-   - Define which switches act as primary and secondary roots for each VLAN or instance.  
-   - Decide where EtherChannels are appropriate and how they will be configured.
-2. **Design Layer 3 routing**
-   - Plan OSPF areas for campus, datacentre, and DR site.  
-   - Decide where summarisation will occur to reduce routing table size.  
-   - Identify where eBGP will be used to connect to the ISP and how routes will be exchanged.
-3. **Plan wireless infrastructure**
-   - Select AP deployment model (centralised controller, distributed, or branch friendly).  
-   - Describe how APs will discover and join controllers.  
-   - Define roaming behaviour between access points and across subnets.
-4. **Define IP services**
-   - Choose authoritative NTP sources and describe the NTP hierarchy.  
-   - Design NAT/PAT at the edge, including which internal ranges will be translated.  
-   - Decide which VLANs will use first hop redundancy and where the active gateways will live.  
-   - Identify any multicast use cases and where PIM or IGMP would be required.
-5. **Document the end-to-end flow**
-   - For a typical user, describe the full path of traffic from wireless or wired access through the campus, to datacentre applications, and out to the internet.
+1. **Identify multicast use cases and scope**
+   - List the specific applications or services that will use multicast and where their sources and receivers sit (campus, datacentre, branches).  
+   - Determine whether these use cases require enterprise-wide multicast or can be contained within certain segments.  
+   - Decide which devices will act as multicast sources and which will act as receivers.
+2. **Choose multicast routing modes**
+   - Decide whether PIM Sparse Mode (PIM-SM), Source-Specific Multicast (SSM), or other modes are appropriate for each use case.  
+   - Identify where Rendezvous Points (RPs) would be placed if PIM-SM is used.  
+   - Consider whether MSDP is needed for multiple RPs or inter-domain scenarios.
+3. **Plan RPF and routing interaction**
+   - Describe how your unicast routing (OSPF/eBGP) will influence RPF checks for multicast sources.  
+   - Identify any asymmetric routing paths that could cause RPF failures.  
+   - Propose adjustments (for example summarisation boundaries or static RPF exceptions) if needed.
+4. **Define edge behaviour and IGMP policy**
+   - Decide where IGMP snooping and IGMP queriers are required in the campus.  
+   - Plan how receivers (for example user VLANs) will signal interest in multicast groups.  
+   - Consider controls to prevent unwanted or excessive multicast group joins.
+5. **Document rollout and validation steps**
+   - Outline a phased approach to enabling multicast in a lab, then limited production, then broader rollout.  
+   - Define the key tests (for example end-to-end group join, failover, and source move) you will run.  
+   - List the show commands and counters you will rely on to validate correct multicast forwarding.
 
 ### Design Diagram (Text Form)
 
-Use this to build a logical diagram:
+Use this to sketch your multicast design:
 
-- **Campus**  
-  - Access switches connecting wired users and APs.  
-  - Distribution or core switches providing routing, with redundant links.  
-  - VLANs and SVIs for different user and server segments.
-- **Datacentre and DR**
-  - Routers or layer 3 switches connecting into the OSPF domain.  
-  - Optional separate area numbers and summarisation boundaries.
-- **Edge and ISP**
-  - WAN edge router(s) that run eBGP with the ISP.  
-  - NAT and first hop redundancy located here or on the core, depending on your design.
+- **Source locations**
+  - Servers or devices that originate multicast traffic and their VLANs/subnets.  
+- **Core and RPs**
+  - Routers running PIM and, if applicable, acting as Rendezvous Points.  
+- **Receiver segments**
+  - VLANs and subnets where receivers join groups via IGMP, indicating which switches perform IGMP snooping.
 
 ### Failure and What-If Analysis
 
-Consider:
+Consider and describe behaviour for these scenarios:
 
-- Spanning tree root failure in the main campus.  
-- Loss of an EtherChannel link bundle.  
-- OSPF adjacency failure between campus and datacentre.  
-- eBGP neighbour failure to the ISP.
+- A unicast routing change causes RPF checks to fail for a key multicast source.  
+- An RP fails or becomes unreachable.  
+- An access switch misconfiguration disables IGMP snooping, leading to multicast flooding.  
+- A new application begins using multicast without prior design review.
 
-For each, describe:
+For each, explain:
 
-- Expected network behaviour.  
-- How users are impacted.  
-- Which design choices help contain or minimise the issue.
+- How multicast traffic flow changes and what impact users may see.  
+- Which logs, counters, or monitoring views would reveal the issue.  
+- What design or operational measures mitigate the problem (for example secondary RPs, better routing design, or access controls).
 
 ### Expected Outcomes
 
 After completing this project you should be able to:
 
-- Explain your Layer 2 and Layer 3 design decisions to another engineer.  
-- Show how wireless, IP services, and routing work together to support applications.  
-- Identify where further improvements such as additional redundancy or better summarisation might be useful.
+- Present a multicast design that fits your enterprise’s actual needs without overcomplicating the network.  
+- Show how RPF behaviour depends on unicast routing and why that matters.  
+- Provide clear guidance for enabling, monitoring, and troubleshooting multicast services.
 
 ### Reflection
 
 Reflect on:
 
-- Which parts of the infrastructure design were most constrained by existing hardware or topology.  
-- How you could phase the migration from the current state to your target design with minimal downtime.  
-- Which assurance and monitoring tools you would rely on during and after the migration.
+- Whether multicast truly adds value for your environment compared to unicast alternatives.  
+- How you would keep multicast configuration and documentation understandable for operations.  
+- What additional lab work or training would be needed before rolling multicast into production.
+
 

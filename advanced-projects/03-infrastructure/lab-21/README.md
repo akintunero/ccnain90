@@ -1,113 +1,95 @@
-## Advanced Infrastructure Lab 14 – End-to-End Enterprise Services Design
+## Advanced Infrastructure Lab 21 – Wireless Design Choices in a Campus Network
 
 ### Scenario
-Your company is modernising its enterprise network. The environment includes:
+Your wired campus design is stabilising, but the wireless environment has evolved without a clear plan:
 
-- A main campus with several wiring closets.
-- A datacentre hosting internal applications.
-- A small disaster recovery site.
-- A single ISP for internet and partner connectivity.
+- Some access points are autonomous, others are lightweight and controller-based.  
+- Different SSIDs use different VLAN mappings and security models.  
+- Roaming performance is inconsistent, especially between buildings.  
 
-The current design has grown organically. There are inconsistent trunk configurations, spanning tree issues, and a mix of static and dynamic routing. Wireless has been added in a piecemeal way and IP services such as NTP and NAT are not centrally planned.
-
-You have been asked to propose a cohesive **Layer 2, Layer 3, wireless, and IP services** infrastructure that aligns with best practices and prepares the network for future growth.
+Application teams are complaining that Wi‑Fi performance and reliability lag behind wired connections. In this lab you will focus on **wireless design choices** — AP deployment models, VLAN and SSID design, and roaming behaviour — and how they integrate with the existing Layer 2 and Layer 3 campus infrastructure.
 
 ### Project Objectives
 
 By the end of this project you should be able to:
 
-- Describe a stable Layer 2 and Layer 3 design for the campus and datacentre.  
-- Show how OSPF and eBGP will be used for internal and external routing.  
-- Explain how wireless access points discover and join controllers and how clients roam.  
-- Plan key IP services such as NTP, NAT/PAT, first hop redundancy, and multicast where appropriate.
+- Choose an appropriate wireless deployment model (centralised, distributed, or mixed) for your campus.  
+- Map SSIDs to VLANs and IP subnets in a way that supports security and scalability.  
+- Describe how access points discover and join controllers.  
+- Explain how client roaming works within and between subnets and how the wired design must support it.
 
 ### Technologies and Design Topics in Scope
 
-This project draws from the ENCOR Infrastructure section:
+This project draws from the Infrastructure section of the syllabus (3.x), focusing on wireless within the broader infrastructure:
 
-- **Layer 2**
-  - 802.1Q trunking, static and dynamic EtherChannel.
-  - Spanning tree (RSTP and MST) for loop free redundancy.
-- **Layer 3**
-  - OSPF design for multiple areas, summarisation, and filtering.
-  - Conceptual comparison with EIGRP.
-  - Basic eBGP to an ISP using directly connected neighbours.
-- **Wireless**
-  - RF basics, AP modes, antenna types.
-  - AP discovery and join process.
-  - Layer 2 and Layer 3 roaming principles.
-  - Troubleshooting client connectivity at a high level.
-- **IP Services**
-  - NTP design.
-  - NAT/PAT for internet access.
-  - First hop redundancy protocols such as HSRP or VRRP.
-  - Multicast concepts (PIM and IGMP).
+- **3.3 IP services and wireless context**
+  - Wireless deployment models, RF basics, AP modes, roaming, and client troubleshooting (as part of the overall infrastructure story).  
+  - Interaction between wireless VLANs, first-hop redundancy, and routing.
 
 ### Project Tasks
 
-1. **Stabilise Layer 2**
-   - Choose a spanning tree mode (for example RSTP or MST) for the campus.  
-   - Define which switches act as primary and secondary roots for each VLAN or instance.  
-   - Decide where EtherChannels are appropriate and how they will be configured.
-2. **Design Layer 3 routing**
-   - Plan OSPF areas for campus, datacentre, and DR site.  
-   - Decide where summarisation will occur to reduce routing table size.  
-   - Identify where eBGP will be used to connect to the ISP and how routes will be exchanged.
-3. **Plan wireless infrastructure**
-   - Select AP deployment model (centralised controller, distributed, or branch friendly).  
-   - Describe how APs will discover and join controllers.  
-   - Define roaming behaviour between access points and across subnets.
-4. **Define IP services**
-   - Choose authoritative NTP sources and describe the NTP hierarchy.  
-   - Design NAT/PAT at the edge, including which internal ranges will be translated.  
-   - Decide which VLANs will use first hop redundancy and where the active gateways will live.  
-   - Identify any multicast use cases and where PIM or IGMP would be required.
-5. **Document the end-to-end flow**
-   - For a typical user, describe the full path of traffic from wireless or wired access through the campus, to datacentre applications, and out to the internet.
+1. **Assess the current wireless landscape**
+   - List existing SSIDs, their purposes (corporate, guest, BYOD, IoT), and which VLANs/subnets they use.  
+   - Identify which APs are controller-based versus standalone and where controllers reside.  
+   - Note any observed problems such as poor roaming or inconsistent IP addressing.
+2. **Select a wireless deployment model**
+   - Decide whether the campus should move toward a centralised, distributed, or hybrid controller model.  
+   - Describe where controllers will sit in the topology and how APs reach them.  
+   - Consider how branch or remote sites will participate in this design.
+3. **Design SSID, VLAN, and IP segmentation**
+   - Propose a simplified SSID set aligned to business needs.  
+   - Map each SSID to appropriate VLANs and IP subnets, taking into account security zones (corporate, guest, IoT).  
+   - Decide where DHCP, DNS, and gateway services will live for these subnets.
+4. **Plan roaming behaviour and support**
+   - Describe how clients will roam within a building and between buildings (Layer 2 vs Layer 3 roaming patterns).  
+   - Identify any requirements for mobility groups, mobility controllers, or fast roaming features.  
+   - Ensure the wired network (VLANs, routing, and redundancy) supports the chosen roaming model.
+5. **Define operational and troubleshooting considerations**
+   - List key metrics and logs for wireless health (AP join state, client counts, RF interference, DHCP failures).  
+   - Outline a basic troubleshooting flow for a user reporting poor Wi‑Fi performance.  
+   - Describe how changes to SSIDs or controllers will be coordinated with wired configuration.
 
 ### Design Diagram (Text Form)
 
-Use this to build a logical diagram:
+Use this to sketch the wireless-related topology:
 
-- **Campus**  
-  - Access switches connecting wired users and APs.  
-  - Distribution or core switches providing routing, with redundant links.  
-  - VLANs and SVIs for different user and server segments.
-- **Datacentre and DR**
-  - Routers or layer 3 switches connecting into the OSPF domain.  
-  - Optional separate area numbers and summarisation boundaries.
-- **Edge and ISP**
-  - WAN edge router(s) that run eBGP with the ISP.  
-  - NAT and first hop redundancy located here or on the core, depending on your design.
+- **Access layer**
+  - APs connected to access switches, indicating which VLANs/SSIDs they serve.  
+- **Controller and core**
+  - Wireless LAN controllers and their connections to the core/distribution layer.  
+  - VLANs and IP subnets used for corporate, guest, and other SSIDs.
+- **Roaming paths**
+  - Example client movement from one AP to another, showing how IP addressing and gateway selection behave.
 
 ### Failure and What-If Analysis
 
-Consider:
+Consider and document behaviour for these scenarios:
 
-- Spanning tree root failure in the main campus.  
-- Loss of an EtherChannel link bundle.  
-- OSPF adjacency failure between campus and datacentre.  
-- eBGP neighbour failure to the ISP.
+- A wireless controller fails or loses connectivity to a group of APs.  
+- A misconfiguration maps a corporate SSID to the guest VLAN.  
+- DHCP or DNS for wireless subnets becomes unavailable.  
+- RF interference or coverage gaps appear in a busy area.
 
-For each, describe:
+For each scenario, explain:
 
-- Expected network behaviour.  
-- How users are impacted.  
-- Which design choices help contain or minimise the issue.
+- The impact on wireless clients and applications.  
+- How you would detect the issue using controller views, logs, or client reports.  
+- What design or operational practices (for example, redundancy, change control, RF surveys) help reduce risk.
 
 ### Expected Outcomes
 
 After completing this project you should be able to:
 
-- Explain your Layer 2 and Layer 3 design decisions to another engineer.  
-- Show how wireless, IP services, and routing work together to support applications.  
-- Identify where further improvements such as additional redundancy or better summarisation might be useful.
+- Present a coherent wireless design that integrates with your existing campus infrastructure.  
+- Justify your SSID, VLAN, and controller placement decisions.  
+- Describe how roaming and resiliency requirements are met at both the wired and wireless layers.
 
 ### Reflection
 
 Reflect on:
 
-- Which parts of the infrastructure design were most constrained by existing hardware or topology.  
-- How you could phase the migration from the current state to your target design with minimal downtime.  
-- Which assurance and monitoring tools you would rely on during and after the migration.
+- How your wireless design balances simplicity, security, and user experience.  
+- Which areas of RF design or wireless troubleshooting you would prioritise for further study.  
+- How you would keep the wireless design documentation current as the environment evolves.
+
 

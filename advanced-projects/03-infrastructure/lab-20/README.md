@@ -1,113 +1,95 @@
-## Advanced Infrastructure Lab 14 – End-to-End Enterprise Services Design
+## Advanced Infrastructure Lab 20 – Policy-Based Routing for Special Traffic Flows
 
 ### Scenario
-Your company is modernising its enterprise network. The environment includes:
+Most of your enterprise traffic should follow the normal routing policy based on destination IP and standard routing protocols. However, a few important use cases do not fit cleanly into that model, for example:
 
-- A main campus with several wiring closets.
-- A datacentre hosting internal applications.
-- A small disaster recovery site.
-- A single ISP for internet and partner connectivity.
+- A backup circuit that should only be used for a specific partner application.  
+- Traffic from a test lab that must exit via a low-cost internet link instead of the primary edge.  
+- A small set of remote branches that should reach a legacy datacentre through a different path.
 
-The current design has grown organically. There are inconsistent trunk configurations, spanning tree issues, and a mix of static and dynamic routing. Wireless has been added in a piecemeal way and IP services such as NTP and NAT are not centrally planned.
-
-You have been asked to propose a cohesive **Layer 2, Layer 3, wireless, and IP services** infrastructure that aligns with best practices and prepares the network for future growth.
+Rather than redesigning your entire routing topology, you have been asked to **evaluate and design limited use of policy-based routing (PBR)** to handle these special cases, while keeping the rest of the network on standard OSPF/eBGP decision making.
 
 ### Project Objectives
 
 By the end of this project you should be able to:
 
-- Describe a stable Layer 2 and Layer 3 design for the campus and datacentre.  
-- Show how OSPF and eBGP will be used for internal and external routing.  
-- Explain how wireless access points discover and join controllers and how clients roam.  
-- Plan key IP services such as NTP, NAT/PAT, first hop redundancy, and multicast where appropriate.
+- Identify when PBR is appropriate versus when a routing redesign is preferable.  
+- Propose a small set of PBR policies for specific traffic flows and locations.  
+- Describe how PBR interacts with existing OSPF/eBGP routing decisions.  
+- Plan how to monitor and troubleshoot PBR behaviour over time.
 
 ### Technologies and Design Topics in Scope
 
-This project draws from the ENCOR Infrastructure section:
+This project draws from the Infrastructure section of the syllabus (3.x), particularly:
 
-- **Layer 2**
-  - 802.1Q trunking, static and dynamic EtherChannel.
-  - Spanning tree (RSTP and MST) for loop free redundancy.
-- **Layer 3**
-  - OSPF design for multiple areas, summarisation, and filtering.
-  - Conceptual comparison with EIGRP.
-  - Basic eBGP to an ISP using directly connected neighbours.
-- **Wireless**
-  - RF basics, AP modes, antenna types.
-  - AP discovery and join process.
-  - Layer 2 and Layer 3 roaming principles.
-  - Troubleshooting client connectivity at a high level.
-- **IP Services**
-  - NTP design.
-  - NAT/PAT for internet access.
-  - First hop redundancy protocols such as HSRP or VRRP.
-  - Multicast concepts (PIM and IGMP).
+- **3.2 Layer 3**
+  - 3.2.d Describing policy-based routing and when it is used.  
+  - 3.2.a Understanding normal path selection so that PBR exceptions are clearly defined.  
 
 ### Project Tasks
 
-1. **Stabilise Layer 2**
-   - Choose a spanning tree mode (for example RSTP or MST) for the campus.  
-   - Define which switches act as primary and secondary roots for each VLAN or instance.  
-   - Decide where EtherChannels are appropriate and how they will be configured.
-2. **Design Layer 3 routing**
-   - Plan OSPF areas for campus, datacentre, and DR site.  
-   - Decide where summarisation will occur to reduce routing table size.  
-   - Identify where eBGP will be used to connect to the ISP and how routes will be exchanged.
-3. **Plan wireless infrastructure**
-   - Select AP deployment model (centralised controller, distributed, or branch friendly).  
-   - Describe how APs will discover and join controllers.  
-   - Define roaming behaviour between access points and across subnets.
-4. **Define IP services**
-   - Choose authoritative NTP sources and describe the NTP hierarchy.  
-   - Design NAT/PAT at the edge, including which internal ranges will be translated.  
-   - Decide which VLANs will use first hop redundancy and where the active gateways will live.  
-   - Identify any multicast use cases and where PIM or IGMP would be required.
-5. **Document the end-to-end flow**
-   - For a typical user, describe the full path of traffic from wireless or wired access through the campus, to datacentre applications, and out to the internet.
+1. **Clarify business and technical requirements**
+   - List the specific traffic flows that currently require special handling (source subnets, destinations, applications).  
+   - For each flow, document the business reason for treating it differently (cost, performance, compliance, or lab/testing).  
+   - Confirm which parts of the network should remain on standard routing with no PBR.
+2. **Select PBR enforcement points**
+   - Decide which routers or multilayer switches are best positioned to apply PBR (for example campus core, WAN edge, or branch routers).  
+   - Ensure that PBR is applied as close as practical to the traffic source to avoid asymmetric paths.  
+   - Note any hardware limitations that might affect PBR scale or performance.
+3. **Design PBR policies**
+   - For each use case, define match conditions (source IP, destination IP, DSCP, or interface) and the desired next-hop or outgoing interface.  
+   - Plan a default behaviour when no PBR conditions match (fall back to normal routing table).  
+   - Consider how overlapping policies are resolved and how configuration will remain readable.
+4. **Plan interaction with routing protocols**
+   - Describe how PBR policies will coexist with OSPF and eBGP route selection on the same devices.  
+   - Decide whether PBR will ever override a safer or more resilient path and how to minimise that risk.  
+   - Document how route changes (for example a new default route) might affect your PBR design.
+5. **Define verification and rollback procedures**
+   - Specify the commands and tools you will use to confirm that only the intended traffic is affected by PBR.  
+   - Plan how to quickly disable PBR for a single policy or interface if problems occur.  
+   - Outline logging or NetFlow sampling you would use to track PBR usage over time.
 
 ### Design Diagram (Text Form)
 
-Use this to build a logical diagram:
+Use this to sketch where PBR fits into your network:
 
-- **Campus**  
-  - Access switches connecting wired users and APs.  
-  - Distribution or core switches providing routing, with redundant links.  
-  - VLANs and SVIs for different user and server segments.
-- **Datacentre and DR**
-  - Routers or layer 3 switches connecting into the OSPF domain.  
-  - Optional separate area numbers and summarisation boundaries.
-- **Edge and ISP**
-  - WAN edge router(s) that run eBGP with the ISP.  
-  - NAT and first hop redundancy located here or on the core, depending on your design.
+- **Core/Edge topology**
+  - Core and distribution routers with standard routing relationships.  
+  - WAN edge and any secondary links where alternative paths exist.
+- **PBR enforcement points**
+  - Routers or interfaces where PBR is applied, annotated with which flows are affected.  
+- **Normal vs PBR paths**
+  - For at least one use case, draw both the default routed path and the PBR-modified path, indicating why the change is desirable.
 
 ### Failure and What-If Analysis
 
-Consider:
+Consider these scenarios and document the impact:
 
-- Spanning tree root failure in the main campus.  
-- Loss of an EtherChannel link bundle.  
-- OSPF adjacency failure between campus and datacentre.  
-- eBGP neighbour failure to the ISP.
+- A PBR next-hop becomes unreachable but the normal routed path is still valid.  
+- A misconfigured PBR policy accidentally captures more traffic than intended.  
+- A new application is introduced that reuses the same ports or addresses as an existing PBR policy.  
+- An engineer forgets to update PBR when a WAN link is repurposed or decommissioned.
 
-For each, describe:
+For each, explain:
 
-- Expected network behaviour.  
-- How users are impacted.  
-- Which design choices help contain or minimise the issue.
+- How traffic flows change and what symptoms users might see.  
+- How you would detect the issue using show commands, logs, or flow data.  
+- What design or procedural safeguards (for example, time-limited policies, change checklists) help prevent similar problems.
 
 ### Expected Outcomes
 
 After completing this project you should be able to:
 
-- Explain your Layer 2 and Layer 3 design decisions to another engineer.  
-- Show how wireless, IP services, and routing work together to support applications.  
-- Identify where further improvements such as additional redundancy or better summarisation might be useful.
+- Recommend whether PBR is appropriate for a given special-case routing requirement.  
+- Design small, targeted PBR policies that do not unnecessarily complicate the wider network.  
+- Provide guidance to operations on how to maintain and troubleshoot those policies safely.
 
 ### Reflection
 
 Reflect on:
 
-- Which parts of the infrastructure design were most constrained by existing hardware or topology.  
-- How you could phase the migration from the current state to your target design with minimal downtime.  
-- Which assurance and monitoring tools you would rely on during and after the migration.
+- How easily PBR use could grow beyond the original intent and what controls you would put in place to avoid that.  
+- Which stakeholders (for example application owners or branch managers) need to understand when PBR is in effect.  
+- Whether future projects (such as SD-WAN) might offer cleaner ways to solve the same traffic-steering problems.
+
 

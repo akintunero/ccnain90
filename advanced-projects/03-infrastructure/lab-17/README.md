@@ -1,113 +1,101 @@
-## Advanced Infrastructure Lab 14 – End-to-End Enterprise Services Design
+## Advanced Infrastructure Lab 17 – OSPFv2/v3 Area and Summarisation Strategy
 
 ### Scenario
-Your company is modernising its enterprise network. The environment includes:
+The enterprise has grown from a single-campus OSPF design into a network that now includes:
 
-- A main campus with several wiring closets.
-- A datacentre hosting internal applications.
-- A small disaster recovery site.
-- A single ISP for internet and partner connectivity.
+- A main campus with multiple distribution blocks.  
+- A datacentre with its own routing domain.  
+- A small DR site connected over a WAN link.  
 
-The current design has grown organically. There are inconsistent trunk configurations, spanning tree issues, and a mix of static and dynamic routing. Wireless has been added in a piecemeal way and IP services such as NTP and NAT are not centrally planned.
+OSPF has been extended incrementally without a clear area plan. Some links run in area 0, others in arbitrary non-backbone areas, and summarisation is inconsistent. Troubleshooting routes between sites is becoming difficult and route tables are larger than necessary.
 
-You have been asked to propose a cohesive **Layer 2, Layer 3, wireless, and IP services** infrastructure that aligns with best practices and prepares the network for future growth.
+In this lab you will design a **clean OSPFv2/v3 area structure and summarisation strategy** that supports campus, datacentre, and DR connectivity while remaining easy to operate and extend.
 
 ### Project Objectives
 
 By the end of this project you should be able to:
 
-- Describe a stable Layer 2 and Layer 3 design for the campus and datacentre.  
-- Show how OSPF and eBGP will be used for internal and external routing.  
-- Explain how wireless access points discover and join controllers and how clients roam.  
-- Plan key IP services such as NTP, NAT/PAT, first hop redundancy, and multicast where appropriate.
+- Propose an OSPF area design that separates campus, datacentre, and DR while respecting backbone rules.  
+- Identify where summarisation should occur to keep routing tables manageable.  
+- Explain how OSPFv2 and OSPFv3 can be used together for dual-stack deployments.  
+- Describe how your OSPF design handles link failures and maintains stable paths.
 
 ### Technologies and Design Topics in Scope
 
-This project draws from the ENCOR Infrastructure section:
+This project draws from the Infrastructure section of the syllabus (3.x), focusing on Layer 3:
 
-- **Layer 2**
-  - 802.1Q trunking, static and dynamic EtherChannel.
-  - Spanning tree (RSTP and MST) for loop free redundancy.
-- **Layer 3**
-  - OSPF design for multiple areas, summarisation, and filtering.
-  - Conceptual comparison with EIGRP.
-  - Basic eBGP to an ISP using directly connected neighbours.
-- **Wireless**
-  - RF basics, AP modes, antenna types.
-  - AP discovery and join process.
-  - Layer 2 and Layer 3 roaming principles.
-  - Troubleshooting client connectivity at a high level.
-- **IP Services**
-  - NTP design.
-  - NAT/PAT for internet access.
-  - First hop redundancy protocols such as HSRP or VRRP.
-  - Multicast concepts (PIM and IGMP).
+- **3.2 Layer 3**
+  - 3.2.a Comparing routing concepts of EIGRP and OSPF (advanced distance vector vs link state, load balancing, path selection, metrics, and area types).  
+  - 3.2.b Configuring simple OSPFv2/v3 environments with multiple normal areas, summarisation, and filtering (including neighbour adjacency, point-to-point and broadcast network types, and passive-interface).  
 
 ### Project Tasks
 
-1. **Stabilise Layer 2**
-   - Choose a spanning tree mode (for example RSTP or MST) for the campus.  
-   - Define which switches act as primary and secondary roots for each VLAN or instance.  
-   - Decide where EtherChannels are appropriate and how they will be configured.
-2. **Design Layer 3 routing**
-   - Plan OSPF areas for campus, datacentre, and DR site.  
-   - Decide where summarisation will occur to reduce routing table size.  
-   - Identify where eBGP will be used to connect to the ISP and how routes will be exchanged.
-3. **Plan wireless infrastructure**
-   - Select AP deployment model (centralised controller, distributed, or branch friendly).  
-   - Describe how APs will discover and join controllers.  
-   - Define roaming behaviour between access points and across subnets.
-4. **Define IP services**
-   - Choose authoritative NTP sources and describe the NTP hierarchy.  
-   - Design NAT/PAT at the edge, including which internal ranges will be translated.  
-   - Decide which VLANs will use first hop redundancy and where the active gateways will live.  
-   - Identify any multicast use cases and where PIM or IGMP would be required.
-5. **Document the end-to-end flow**
-   - For a typical user, describe the full path of traffic from wireless or wired access through the campus, to datacentre applications, and out to the internet.
+1. **Map the current OSPF topology**
+   - Draw a high-level view of routers in the campus, datacentre, and DR sites.  
+   - Note which interfaces and links currently belong to area 0 and which belong to other areas.  
+   - Identify any non-backbone areas that are not directly connected to area 0.
+2. **Design the target area structure**
+   - Decide which routers will form the backbone (area 0).  
+   - Assign campus, datacentre, and DR segments to appropriate normal areas.  
+   - Determine where ABRs will sit and document their roles.  
+   - Consider whether any stub or NSSA areas would be useful and justify your decision.
+3. **Plan summarisation and filtering**
+   - Choose summarisation points at ABRs to reduce the number of prefixes advertised between areas.  
+   - Decide which internal routes should be summarised and which should remain specific.  
+   - Document any simple prefix filtering that might be needed to prevent unnecessary routes from crossing areas.
+4. **Define adjacency and network type considerations**
+   - For each OSPF link (campus, datacentre, DR, WAN), decide whether it should run as broadcast, point-to-point, or NBMA.  
+   - Note where passive-interface should be used (for example on user-facing interfaces).  
+   - Ensure that adjacency formation remains predictable and avoids unnecessary DR/BDR elections on point-to-point links.
+5. **Document migration and validation steps**
+   - Outline a phased plan to transition from the current ad-hoc area layout to your target design.  
+   - List the key verification steps at each phase (for example route counts on core routers, end-to-end reachability between sites).  
+   - Include rollback considerations if unexpected reachability issues occur.
 
 ### Design Diagram (Text Form)
 
-Use this to build a logical diagram:
+Use this description to produce a routing-focused diagram:
 
-- **Campus**  
-  - Access switches connecting wired users and APs.  
-  - Distribution or core switches providing routing, with redundant links.  
-  - VLANs and SVIs for different user and server segments.
-- **Datacentre and DR**
-  - Routers or layer 3 switches connecting into the OSPF domain.  
-  - Optional separate area numbers and summarisation boundaries.
-- **Edge and ISP**
-  - WAN edge router(s) that run eBGP with the ISP.  
-  - NAT and first hop redundancy located here or on the core, depending on your design.
+- **Area 0 (Backbone)**
+  - Core routers connecting campus, datacentre, and DR ABRs.  
+  - Links and subnets that should always remain in the backbone.
+- **Campus area(s)**
+  - Distribution routers acting as ABRs between area 0 and campus access segments.  
+  - Summaries advertised from campus into area 0.
+- **Datacentre and DR areas**
+  - Routers and subnets grouped into dedicated areas for server and DR infrastructure.  
+  - Summarisation boundaries and any special area types (for example stub or NSSA).
 
 ### Failure and What-If Analysis
 
-Consider:
+Consider these scenarios and describe how your OSPF design behaves:
 
-- Spanning tree root failure in the main campus.  
-- Loss of an EtherChannel link bundle.  
-- OSPF adjacency failure between campus and datacentre.  
-- eBGP neighbour failure to the ISP.
+- A backbone link between two core routers fails, splitting area 0 into two parts.  
+- An ABR between the campus area and area 0 fails.  
+- A misconfiguration assigns an access router interface to the wrong OSPF area.  
+- A summarisation change accidentally hides a more specific route needed for reachability.
 
-For each, describe:
+For each scenario, explain:
 
-- Expected network behaviour.  
-- How users are impacted.  
-- Which design choices help contain or minimise the issue.
+- How OSPF recalculates paths and what routes remain in the table.  
+- Which parts of the network lose connectivity, if any.  
+- What monitoring indicators (for example adjacency state, LSA changes, route counts) would highlight the problem.  
+- How your design choices minimise impact or make troubleshooting easier.
 
 ### Expected Outcomes
 
 After completing this project you should be able to:
 
-- Explain your Layer 2 and Layer 3 design decisions to another engineer.  
-- Show how wireless, IP services, and routing work together to support applications.  
-- Identify where further improvements such as additional redundancy or better summarisation might be useful.
+- Present a clear OSPFv2/v3 area and summarisation design for a multi-site enterprise.  
+- Justify your backbone and area placement decisions with respect to scalability and resilience.  
+- Predict how changes in one area affect route visibility and path selection elsewhere.
 
 ### Reflection
 
 Reflect on:
 
-- Which parts of the infrastructure design were most constrained by existing hardware or topology.  
-- How you could phase the migration from the current state to your target design with minimal downtime.  
-- Which assurance and monitoring tools you would rely on during and after the migration.
+- Which aspects of OSPF area design are most likely to cause operational issues if not documented.  
+- How you would teach a junior engineer to read and understand your OSPF design.  
+- What tooling or visualisations would help maintain confidence in the routing design as the network grows.
+
 

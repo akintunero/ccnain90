@@ -1,113 +1,101 @@
-## Advanced Infrastructure Lab 14 – End-to-End Enterprise Services Design
+## Advanced Infrastructure Lab 22 – Wireless Client Troubleshooting and Root Cause Mapping
 
 ### Scenario
-Your company is modernising its enterprise network. The environment includes:
+After your new wireless design is rolled out, helpdesk tickets show a familiar pattern:
 
-- A main campus with several wiring closets.
-- A datacentre hosting internal applications.
-- A small disaster recovery site.
-- A single ISP for internet and partner connectivity.
+- Some users can see SSIDs but cannot obtain an IP address.  
+- Others connect but experience frequent disconnects or timeouts.  
+- A few report that Wi‑Fi works in some areas but not others, even on the same SSID.  
 
-The current design has grown organically. There are inconsistent trunk configurations, spanning tree issues, and a mix of static and dynamic routing. Wireless has been added in a piecemeal way and IP services such as NTP and NAT are not centrally planned.
-
-You have been asked to propose a cohesive **Layer 2, Layer 3, wireless, and IP services** infrastructure that aligns with best practices and prepares the network for future growth.
+Many of these issues are blamed on “the Wi‑Fi”, but investigation often reveals underlying Layer 2 or Layer 3 causes (VLANs, routing, DHCP, DNS, or firewall policies). In this lab you will develop a **structured troubleshooting approach for wireless client issues** and explicitly map findings back to the wired infrastructure.
 
 ### Project Objectives
 
 By the end of this project you should be able to:
 
-- Describe a stable Layer 2 and Layer 3 design for the campus and datacentre.  
-- Show how OSPF and eBGP will be used for internal and external routing.  
-- Explain how wireless access points discover and join controllers and how clients roam.  
-- Plan key IP services such as NTP, NAT/PAT, first hop redundancy, and multicast where appropriate.
+- Classify common wireless client problems and link them to specific infrastructure components.  
+- Define a repeatable troubleshooting flow that moves from client to AP to controller to wired network.  
+- Identify which Layer 2 and Layer 3 checks are most important when Wi‑Fi users report problems.  
+- Document findings in a way that helps both wireless and wired teams collaborate.
 
 ### Technologies and Design Topics in Scope
 
-This project draws from the ENCOR Infrastructure section:
+This project continues the Infrastructure focus (3.x), with emphasis on:
 
-- **Layer 2**
-  - 802.1Q trunking, static and dynamic EtherChannel.
-  - Spanning tree (RSTP and MST) for loop free redundancy.
-- **Layer 3**
-  - OSPF design for multiple areas, summarisation, and filtering.
-  - Conceptual comparison with EIGRP.
-  - Basic eBGP to an ISP using directly connected neighbours.
-- **Wireless**
-  - RF basics, AP modes, antenna types.
-  - AP discovery and join process.
-  - Layer 2 and Layer 3 roaming principles.
-  - Troubleshooting client connectivity at a high level.
-- **IP Services**
-  - NTP design.
-  - NAT/PAT for internet access.
-  - First hop redundancy protocols such as HSRP or VRRP.
-  - Multicast concepts (PIM and IGMP).
+- **3.1 Layer 2**
+  - Evaluating VLAN membership and trunk behaviour for wireless SSID mappings.  
+- **3.2 Layer 3**
+  - Verifying gateway reachability and routing for wireless client subnets.  
+- **3.3 IP services**
+  - Checking DHCP, DNS, and first-hop redundancy for wireless VLANs.
 
 ### Project Tasks
 
-1. **Stabilise Layer 2**
-   - Choose a spanning tree mode (for example RSTP or MST) for the campus.  
-   - Define which switches act as primary and secondary roots for each VLAN or instance.  
-   - Decide where EtherChannels are appropriate and how they will be configured.
-2. **Design Layer 3 routing**
-   - Plan OSPF areas for campus, datacentre, and DR site.  
-   - Decide where summarisation will occur to reduce routing table size.  
-   - Identify where eBGP will be used to connect to the ISP and how routes will be exchanged.
-3. **Plan wireless infrastructure**
-   - Select AP deployment model (centralised controller, distributed, or branch friendly).  
-   - Describe how APs will discover and join controllers.  
-   - Define roaming behaviour between access points and across subnets.
-4. **Define IP services**
-   - Choose authoritative NTP sources and describe the NTP hierarchy.  
-   - Design NAT/PAT at the edge, including which internal ranges will be translated.  
-   - Decide which VLANs will use first hop redundancy and where the active gateways will live.  
-   - Identify any multicast use cases and where PIM or IGMP would be required.
-5. **Document the end-to-end flow**
-   - For a typical user, describe the full path of traffic from wireless or wired access through the campus, to datacentre applications, and out to the internet.
+1. **Define typical wireless client problem categories**
+   - Connectivity failures (cannot see SSID, cannot associate, cannot obtain IP).  
+   - Performance issues (slow throughput, high latency, intermittent drops).  
+   - Reachability issues (can reach local resources but not internet, or vice versa).  
+   - Authentication or captive portal problems.
+2. **Design a step-by-step troubleshooting flow**
+   - Start at the client: verify basic settings, signal strength, and association status.  
+   - Move to the AP: check which SSID/VLAN the client is on and whether the AP has successfully joined the controller.  
+   - Follow the path into the wired network: confirm VLAN tagging on switch ports, SVI reachability, and routing.  
+   - Check DHCP, DNS, and any firewalls or ACLs on the path.
+3. **Identify key commands and data sources**
+   - On controllers/APs: logs, client sessions, RF statistics.  
+   - On switches/routers: interface status, VLAN and trunk configuration, routing table entries, ARP/ND tables.  
+   - On servers or infrastructure services: DHCP leases, DNS responses, authentication logs.
+4. **Create example troubleshooting stories**
+   - Write at least two short case studies, for example:
+     - A client that associates but fails DHCP due to a missing helper address.  
+     - A user who can reach internal apps but not the internet because of an ACL on the edge.  
+   - For each story, show how your flow leads from the symptom to the root cause.
+5. **Develop a handoff template**
+   - Create a simple template that helpdesk or junior engineers can fill in before escalating:  
+     - Client details (MAC, IP, SSID, location).  
+     - Initial checks performed and results.  
+     - Suspected infrastructure component (AP, controller, switch, router, firewall, server).
 
 ### Design Diagram (Text Form)
 
-Use this to build a logical diagram:
+Use this to sketch a troubleshooting-oriented view:
 
-- **Campus**  
-  - Access switches connecting wired users and APs.  
-  - Distribution or core switches providing routing, with redundant links.  
-  - VLANs and SVIs for different user and server segments.
-- **Datacentre and DR**
-  - Routers or layer 3 switches connecting into the OSPF domain.  
-  - Optional separate area numbers and summarisation boundaries.
-- **Edge and ISP**
-  - WAN edge router(s) that run eBGP with the ISP.  
-  - NAT and first hop redundancy located here or on the core, depending on your design.
+- **Client and RF edge**
+  - Client connecting to an AP, with SSID and VLAN mapping annotated.  
+- **Wireless infrastructure**
+  - Controller or management plane components that track client state.  
+- **Wired path**
+  - Access switch, distribution/core, gateway, and internet edge showing where DHCP, DNS, and ACLs reside.
 
 ### Failure and What-If Analysis
 
-Consider:
+Consider and describe how your troubleshooting flow handles:
 
-- Spanning tree root failure in the main campus.  
-- Loss of an EtherChannel link bundle.  
-- OSPF adjacency failure between campus and datacentre.  
-- eBGP neighbour failure to the ISP.
+- A misconfigured access switch port that places AP traffic in the wrong VLAN.  
+- A DHCP server outage for a wireless subnet.  
+- A change in firewall policy that unintentionally blocks wireless clients only.  
+- RF-only issues (for example interference or low signal) where the wired path is healthy.
 
-For each, describe:
+For each, explain:
 
-- Expected network behaviour.  
-- How users are impacted.  
-- Which design choices help contain or minimise the issue.
+- The observable client symptoms.  
+- Which points in your flow would reveal the problem.  
+- How you would document the resolution and update runbooks to prevent repeat incidents.
 
 ### Expected Outcomes
 
 After completing this project you should be able to:
 
-- Explain your Layer 2 and Layer 3 design decisions to another engineer.  
-- Show how wireless, IP services, and routing work together to support applications.  
-- Identify where further improvements such as additional redundancy or better summarisation might be useful.
+- Lead a structured investigation of wireless client problems that quickly distinguishes RF from wired issues.  
+- Provide operations staff with a clear, reusable checklist for Wi‑Fi incident handling.  
+- Improve collaboration between wireless and wired teams by clearly mapping responsibilities.
 
 ### Reflection
 
 Reflect on:
 
-- Which parts of the infrastructure design were most constrained by existing hardware or topology.  
-- How you could phase the migration from the current state to your target design with minimal downtime.  
-- Which assurance and monitoring tools you would rely on during and after the migration.
+- Which parts of the troubleshooting flow are most likely to be skipped under time pressure and how to prevent that.  
+- How tooling (controller dashboards, logs, NMS) can make this process faster and more accurate.  
+- What training or documentation would help non-wireless specialists handle basic Wi‑Fi tickets more confidently.
+
 

@@ -1,113 +1,116 @@
-## Advanced Infrastructure Lab 14 – End-to-End Enterprise Services Design
+## Advanced Infrastructure Lab 15 – Campus EtherChannel and Trunk Troubleshooting Runbook
 
 ### Scenario
-Your company is modernising its enterprise network. The environment includes:
+Intermittent connectivity issues continue to appear in the campus even after you stabilised basic Spanning Tree behaviour in a previous project. Users report that:
 
-- A main campus with several wiring closets.
-- A datacentre hosting internal applications.
-- A small disaster recovery site.
-- A single ISP for internet and partner connectivity.
+- Some VLANs go down when a single uplink in a bundle fails.
+- New access switches occasionally cause black holes for specific VLANs.
+- EtherChannel bundles flap when interfaces are moved or replaced.
 
-The current design has grown organically. There are inconsistent trunk configurations, spanning tree issues, and a mix of static and dynamic routing. Wireless has been added in a piecemeal way and IP services such as NTP and NAT are not centrally planned.
-
-You have been asked to propose a cohesive **Layer 2, Layer 3, wireless, and IP services** infrastructure that aligns with best practices and prepares the network for future growth.
+An internal audit shows inconsistent trunk allowed-vlan lists and a mixture of manual and protocol-negotiated EtherChannels. In this lab your goal is to **design a troubleshooting and hardening runbook** specifically for trunks and EtherChannels so that future incidents can be resolved quickly and configuration drift is reduced.
 
 ### Project Objectives
 
 By the end of this project you should be able to:
 
-- Describe a stable Layer 2 and Layer 3 design for the campus and datacentre.  
-- Show how OSPF and eBGP will be used for internal and external routing.  
-- Explain how wireless access points discover and join controllers and how clients roam.  
-- Plan key IP services such as NTP, NAT/PAT, first hop redundancy, and multicast where appropriate.
+- Identify common misconfigurations in 802.1Q trunks and EtherChannels that lead to outages.  
+- Define a standard approach for building, verifying, and documenting campus uplink bundles.  
+- Create a troubleshooting flow that junior engineers can follow during EtherChannel or trunk incidents.  
+- Explain how these practices relate to the syllabus topics for Layer 2 infrastructure.
 
 ### Technologies and Design Topics in Scope
 
-This project draws from the ENCOR Infrastructure section:
+This project draws from the Infrastructure section of the syllabus (3.x), focusing on Layer 2 fault isolation:
 
-- **Layer 2**
-  - 802.1Q trunking, static and dynamic EtherChannel.
-  - Spanning tree (RSTP and MST) for loop free redundancy.
-- **Layer 3**
-  - OSPF design for multiple areas, summarisation, and filtering.
-  - Conceptual comparison with EIGRP.
-  - Basic eBGP to an ISP using directly connected neighbours.
-- **Wireless**
-  - RF basics, AP modes, antenna types.
-  - AP discovery and join process.
-  - Layer 2 and Layer 3 roaming principles.
-  - Troubleshooting client connectivity at a high level.
-- **IP Services**
-  - NTP design.
-  - NAT/PAT for internet access.
-  - First hop redundancy protocols such as HSRP or VRRP.
-  - Multicast concepts (PIM and IGMP).
+- **3.1 Layer 2**
+  - 3.1.a Troubleshooting static and dynamic 802.1Q trunking.  
+  - 3.1.b Troubleshooting static and dynamic EtherChannels.  
+  - 3.1.c Verifying STP behaviour in the presence of trunk and bundle changes.  
+- **3.2 Layer 3 (context only)**
+  - How Layer 3 reachability is affected when Layer 2 trunks or bundles fail.  
 
 ### Project Tasks
 
-1. **Stabilise Layer 2**
-   - Choose a spanning tree mode (for example RSTP or MST) for the campus.  
-   - Define which switches act as primary and secondary roots for each VLAN or instance.  
-   - Decide where EtherChannels are appropriate and how they will be configured.
-2. **Design Layer 3 routing**
-   - Plan OSPF areas for campus, datacentre, and DR site.  
-   - Decide where summarisation will occur to reduce routing table size.  
-   - Identify where eBGP will be used to connect to the ISP and how routes will be exchanged.
-3. **Plan wireless infrastructure**
-   - Select AP deployment model (centralised controller, distributed, or branch friendly).  
-   - Describe how APs will discover and join controllers.  
-   - Define roaming behaviour between access points and across subnets.
-4. **Define IP services**
-   - Choose authoritative NTP sources and describe the NTP hierarchy.  
-   - Design NAT/PAT at the edge, including which internal ranges will be translated.  
-   - Decide which VLANs will use first hop redundancy and where the active gateways will live.  
-   - Identify any multicast use cases and where PIM or IGMP would be required.
-5. **Document the end-to-end flow**
-   - For a typical user, describe the full path of traffic from wireless or wired access through the campus, to datacentre applications, and out to the internet.
+1. **Catalogue current uplink designs**
+   - List all access-to-distribution and distribution-to-core uplinks.  
+   - For each uplink, record:
+     - Whether it is a single trunk or part of an EtherChannel.  
+     - The negotiation protocol in use (for example static, PAgP, LACP).  
+     - The allowed VLAN list and native VLAN.  
+   - Note any deviations from your intended design pattern.
+2. **Define a standard EtherChannel and trunk template**
+   - Choose a default negotiation strategy (for example LACP active/active).  
+   - Specify a standard allowed-vlan policy and native VLAN handling.  
+   - Decide how port-channel numbering and descriptions will be allocated.  
+   - Document the exact CLI or configuration snippets that implement this standard.
+3. **Design a troubleshooting flow**
+   - Create a step-by-step checklist for diagnosing a broken EtherChannel or trunk, including:
+     - Status of physical members and port-channel interfaces.  
+     - Verification of negotiation status and bundle consistency.  
+     - Checks for mismatched VLAN lists or native VLANs.  
+   - Include which show commands to run and what output a healthy link should produce.
+4. **Plan validation tests**
+   - Describe how you would deliberately:
+     - Remove one member from an EtherChannel.  
+     - Introduce a VLAN mismatch on one side of a trunk.  
+     - Change negotiation settings on one end only.  
+   - For each test, state:
+     - The expected device behaviour and logs.  
+     - The impact on user traffic.  
+     - How your runbook would guide someone to the root cause.
+5. **Produce an operations-facing runbook**
+   - Summarise your standards and troubleshooting flow in a short document structure:
+     - Purpose and scope.  
+     - When to use this runbook.  
+     - Quick checks vs deep-dive diagnostics.  
+   - Make sure the language is clear enough for a Tier-1 or Tier-2 engineer.
 
 ### Design Diagram (Text Form)
 
-Use this to build a logical diagram:
+Use this to sketch a logical view that supports your runbook:
 
-- **Campus**  
-  - Access switches connecting wired users and APs.  
-  - Distribution or core switches providing routing, with redundant links.  
-  - VLANs and SVIs for different user and server segments.
-- **Datacentre and DR**
-  - Routers or layer 3 switches connecting into the OSPF domain.  
-  - Optional separate area numbers and summarisation boundaries.
-- **Edge and ISP**
-  - WAN edge router(s) that run eBGP with the ISP.  
-  - NAT and first hop redundancy located here or on the core, depending on your design.
+- **Core/Distribution**
+  - Port-channels connecting core and distribution switches with clearly labelled member interfaces.  
+  - Notes indicating standard VLANs carried on these bundles.
+- **Access layer**
+  - Access switches with dual uplinks in EtherChannels to distribution.  
+  - Highlight where trunk-only links still exist and why.
+- **Troubleshooting overlays**
+  - For at least one bundle, annotate where to check:
+    - Physical status (interfaces).  
+    - Logical status (port-channel summary).  
+    - VLAN presence (show interfaces trunk or equivalent).
 
 ### Failure and What-If Analysis
 
-Consider:
+Consider these scenarios and describe how your runbook and standards respond:
 
-- Spanning tree root failure in the main campus.  
-- Loss of an EtherChannel link bundle.  
-- OSPF adjacency failure between campus and datacentre.  
-- eBGP neighbour failure to the ISP.
+- An engineer replaces an access switch uplink module and forgets to reapply the EtherChannel configuration.  
+- A trunk between two distribution switches has a different allowed VLAN list on each side.  
+- LACP is disabled on one side of a previously healthy bundle.  
+- A new VLAN is added to the campus but is not added to all required trunk ports.
 
-For each, describe:
+For each case, explain:
 
-- Expected network behaviour.  
-- How users are impacted.  
-- Which design choices help contain or minimise the issue.
+- Likely user-visible symptoms.  
+- Key indicators in logs or show commands.  
+- The sequence of checks from your runbook that lead to resolution.  
+- Any long-term design adjustments that would prevent recurrence.
 
 ### Expected Outcomes
 
 After completing this project you should be able to:
 
-- Explain your Layer 2 and Layer 3 design decisions to another engineer.  
-- Show how wireless, IP services, and routing work together to support applications.  
-- Identify where further improvements such as additional redundancy or better summarisation might be useful.
+- Demonstrate a clear, repeatable method for diagnosing trunk and EtherChannel problems.  
+- Justify your chosen EtherChannel and trunk standards in terms of reliability and simplicity.  
+- Provide operations with documentation that shortens the time to repair Layer 2 incidents.
 
 ### Reflection
 
 Reflect on:
 
-- Which parts of the infrastructure design were most constrained by existing hardware or topology.  
-- How you could phase the migration from the current state to your target design with minimal downtime.  
-- Which assurance and monitoring tools you would rely on during and after the migration.
+- Which types of trunk or EtherChannel issues were hardest to detect quickly.  
+- How much standardisation is realistic in your environment versus ideal.  
+- How you would measure whether your runbook actually reduces incident duration over time.
+
 

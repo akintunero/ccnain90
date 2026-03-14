@@ -1,113 +1,94 @@
-## Advanced Infrastructure Lab 14 – End-to-End Enterprise Services Design
+## Advanced Infrastructure Lab 23 – NTP and Time Synchronisation Design
 
 ### Scenario
-Your company is modernising its enterprise network. The environment includes:
+During recent incidents, engineers discovered that device clocks across the network were significantly out of sync:
 
-- A main campus with several wiring closets.
-- A datacentre hosting internal applications.
-- A small disaster recovery site.
-- A single ISP for internet and partner connectivity.
+- Core switches and routers showed different times for the same event.  
+- Wireless controllers and firewalls had their own NTP sources or local clocks.  
+- Syslog and SIEM timelines were difficult to correlate with application logs.  
 
-The current design has grown organically. There are inconsistent trunk configurations, spanning tree issues, and a mix of static and dynamic routing. Wireless has been added in a piecemeal way and IP services such as NTP and NAT are not centrally planned.
-
-You have been asked to propose a cohesive **Layer 2, Layer 3, wireless, and IP services** infrastructure that aligns with best practices and prepares the network for future growth.
+This made it hard to understand the true sequence of events and to prove what happened when. In this lab you will design a **network-wide NTP and time synchronisation strategy** so that infrastructure, security, and application components share a common, reliable sense of time.
 
 ### Project Objectives
 
 By the end of this project you should be able to:
 
-- Describe a stable Layer 2 and Layer 3 design for the campus and datacentre.  
-- Show how OSPF and eBGP will be used for internal and external routing.  
-- Explain how wireless access points discover and join controllers and how clients roam.  
-- Plan key IP services such as NTP, NAT/PAT, first hop redundancy, and multicast where appropriate.
+- Choose appropriate NTP (and where relevant PTP) time sources for the enterprise.  
+- Design an NTP hierarchy that avoids single points of failure and keeps time consistent.  
+- Map how accurate time supports troubleshooting, security investigations, and compliance.  
+- Explain how your design fits into the broader IP services strategy.
 
 ### Technologies and Design Topics in Scope
 
-This project draws from the ENCOR Infrastructure section:
+This project focuses on the IP services portion of the Infrastructure syllabus (3.3):
 
-- **Layer 2**
-  - 802.1Q trunking, static and dynamic EtherChannel.
-  - Spanning tree (RSTP and MST) for loop free redundancy.
-- **Layer 3**
-  - OSPF design for multiple areas, summarisation, and filtering.
-  - Conceptual comparison with EIGRP.
-  - Basic eBGP to an ISP using directly connected neighbours.
-- **Wireless**
-  - RF basics, AP modes, antenna types.
-  - AP discovery and join process.
-  - Layer 2 and Layer 3 roaming principles.
-  - Troubleshooting client connectivity at a high level.
-- **IP Services**
-  - NTP design.
-  - NAT/PAT for internet access.
-  - First hop redundancy protocols such as HSRP or VRRP.
-  - Multicast concepts (PIM and IGMP).
+- **3.3 IP services**
+  - 3.3.a Interpreting network time protocol configurations such as NTP and PTP.  
+  - Related considerations for syslog and monitoring alignment.
 
 ### Project Tasks
 
-1. **Stabilise Layer 2**
-   - Choose a spanning tree mode (for example RSTP or MST) for the campus.  
-   - Define which switches act as primary and secondary roots for each VLAN or instance.  
-   - Decide where EtherChannels are appropriate and how they will be configured.
-2. **Design Layer 3 routing**
-   - Plan OSPF areas for campus, datacentre, and DR site.  
-   - Decide where summarisation will occur to reduce routing table size.  
-   - Identify where eBGP will be used to connect to the ISP and how routes will be exchanged.
-3. **Plan wireless infrastructure**
-   - Select AP deployment model (centralised controller, distributed, or branch friendly).  
-   - Describe how APs will discover and join controllers.  
-   - Define roaming behaviour between access points and across subnets.
-4. **Define IP services**
-   - Choose authoritative NTP sources and describe the NTP hierarchy.  
-   - Design NAT/PAT at the edge, including which internal ranges will be translated.  
-   - Decide which VLANs will use first hop redundancy and where the active gateways will live.  
-   - Identify any multicast use cases and where PIM or IGMP would be required.
-5. **Document the end-to-end flow**
-   - For a typical user, describe the full path of traffic from wireless or wired access through the campus, to datacentre applications, and out to the internet.
+1. **Assess current time synchronisation state**
+   - Identify which devices are currently configured with NTP, and which rely on local clocks.  
+   - Determine whether NTP servers are internal, external, or both.  
+   - Note any devices that show obvious time drift or inconsistent timestamps in logs.
+2. **Select authoritative time sources**
+   - Decide whether the enterprise will use external public NTP servers, GPS-backed internal servers, or a combination.  
+   - Consider which sites (campus, datacentre, DR) should host local NTP servers for resilience.  
+   - Document any firewall or security requirements for NTP traffic.
+3. **Design the NTP hierarchy**
+   - Define which devices are NTP servers, clients, or both (for example, core routers acting as NTP servers for access devices).  
+   - Plan stratum levels and redundancy so that the loss of a single server does not break time sync.  
+   - Decide how branch sites will synchronise time, especially if WAN links are unreliable.
+4. **Integrate time with logging and monitoring**
+   - Describe how accurate time supports syslog, NetFlow, IPSLA, and security event correlation.  
+   - Identify which logging and monitoring platforms must also follow the NTP design.  
+   - Plan simple checks to validate that timestamps match across major systems.
+5. **Document operational practices**
+   - Provide guidance on how and when to change NTP servers (for example during migrations).  
+   - Define what to check if a device shows incorrect time (NTP reachability, stratum, offset, and jitter).  
+   - Suggest periodic audits to confirm that new devices follow the NTP standard.
 
 ### Design Diagram (Text Form)
 
-Use this to build a logical diagram:
+Use this to sketch the time synchronisation topology:
 
-- **Campus**  
-  - Access switches connecting wired users and APs.  
-  - Distribution or core switches providing routing, with redundant links.  
-  - VLANs and SVIs for different user and server segments.
-- **Datacentre and DR**
-  - Routers or layer 3 switches connecting into the OSPF domain.  
-  - Optional separate area numbers and summarisation boundaries.
-- **Edge and ISP**
-  - WAN edge router(s) that run eBGP with the ISP.  
-  - NAT and first hop redundancy located here or on the core, depending on your design.
+- **Authoritative layer**
+  - External or GPS-backed NTP servers and their connections to the enterprise.  
+- **Core and distribution**
+  - Devices that act as NTP servers for the rest of the network, including redundancy.  
+- **Access and remote sites**
+  - Access switches, routers, controllers, and security devices showing from which NTP servers they obtain time.
 
 ### Failure and What-If Analysis
 
-Consider:
+Consider these scenarios and describe your design’s behaviour:
 
-- Spanning tree root failure in the main campus.  
-- Loss of an EtherChannel link bundle.  
-- OSPF adjacency failure between campus and datacentre.  
-- eBGP neighbour failure to the ISP.
+- The primary external NTP source becomes unreachable.  
+- An internal NTP server’s clock drifts significantly due to misconfiguration.  
+- A group of devices is accidentally left pointing to an obsolete NTP IP address.  
+- A security policy change blocks NTP traffic between key sites.
 
-For each, describe:
+For each, explain:
 
-- Expected network behaviour.  
-- How users are impacted.  
-- Which design choices help contain or minimise the issue.
+- How you would detect the issue (for example via logs, monitoring, or visible clock skew).  
+- What failover or redundancy mechanisms mitigate the impact.  
+- What corrective actions should be taken and how to avoid similar problems in future.
 
 ### Expected Outcomes
 
 After completing this project you should be able to:
 
-- Explain your Layer 2 and Layer 3 design decisions to another engineer.  
-- Show how wireless, IP services, and routing work together to support applications.  
-- Identify where further improvements such as additional redundancy or better summarisation might be useful.
+- Present a clear, hierarchical NTP design for your enterprise network.  
+- Show how accurate and consistent time improves troubleshooting and security investigations.  
+- Provide simple instructions for operations to maintain and verify time synchronisation.
 
 ### Reflection
 
 Reflect on:
 
-- Which parts of the infrastructure design were most constrained by existing hardware or topology.  
-- How you could phase the migration from the current state to your target design with minimal downtime.  
-- Which assurance and monitoring tools you would rely on during and after the migration.
+- How critical accurate time is for your organisation’s specific applications and compliance needs.  
+- Which parts of your NTP design are most sensitive to misconfiguration or neglect.  
+- How you would incorporate PTP or more precise time mechanisms if future requirements demanded it.
+
 

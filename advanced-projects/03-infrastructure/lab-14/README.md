@@ -1,113 +1,103 @@
-## Advanced Infrastructure Lab 14 – End-to-End Enterprise Services Design
+## Advanced Infrastructure Lab 14 – Layer 2 Stability and Trunking Audit
 
 ### Scenario
-Your company is modernising its enterprise network. The environment includes:
+Your company has reported several short but disruptive outages in the main campus. Users on some VLANs briefly lose connectivity when uplinks are changed or when new access switches are added. A quick review shows:
 
-- A main campus with several wiring closets.
-- A datacentre hosting internal applications.
-- A small disaster recovery site.
-- A single ISP for internet and partner connectivity.
+- A mix of static and dynamic 802.1Q trunks.
+- EtherChannels built with different hashing and negotiation settings.
+- Spanning Tree roots that were elected by accident rather than design.
 
-The current design has grown organically. There are inconsistent trunk configurations, spanning tree issues, and a mix of static and dynamic routing. Wireless has been added in a piecemeal way and IP services such as NTP and NAT are not centrally planned.
-
-You have been asked to propose a cohesive **Layer 2, Layer 3, wireless, and IP services** infrastructure that aligns with best practices and prepares the network for future growth.
+Routing, IP services, and wireless will be addressed in later labs. In this first Infrastructure project your goal is to **stabilise the Layer 2 foundation**: make trunks, EtherChannels, and STP predictable so that future changes are low risk.
 
 ### Project Objectives
 
 By the end of this project you should be able to:
 
-- Describe a stable Layer 2 and Layer 3 design for the campus and datacentre.  
-- Show how OSPF and eBGP will be used for internal and external routing.  
-- Explain how wireless access points discover and join controllers and how clients roam.  
-- Plan key IP services such as NTP, NAT/PAT, first hop redundancy, and multicast where appropriate.
+- Describe a deliberate Layer 2 topology for the campus access and distribution layers.  
+- Standardise 802.1Q trunk and EtherChannel configuration across uplinks.  
+- Select and justify an STP mode and root placement strategy.  
+- Explain how your Layer 2 decisions set up later routing and services work.
 
 ### Technologies and Design Topics in Scope
 
-This project draws from the ENCOR Infrastructure section:
+This project draws primarily from the Infrastructure section of the syllabus (3.x), with emphasis on Layer 2:
 
-- **Layer 2**
-  - 802.1Q trunking, static and dynamic EtherChannel.
-  - Spanning tree (RSTP and MST) for loop free redundancy.
-- **Layer 3**
-  - OSPF design for multiple areas, summarisation, and filtering.
-  - Conceptual comparison with EIGRP.
-  - Basic eBGP to an ISP using directly connected neighbours.
-- **Wireless**
-  - RF basics, AP modes, antenna types.
-  - AP discovery and join process.
-  - Layer 2 and Layer 3 roaming principles.
-  - Troubleshooting client connectivity at a high level.
-- **IP Services**
-  - NTP design.
-  - NAT/PAT for internet access.
-  - First hop redundancy protocols such as HSRP or VRRP.
-  - Multicast concepts (PIM and IGMP).
+- **3.1 Layer 2**
+  - 3.1.a Troubleshooting static and dynamic 802.1Q trunking.
+  - 3.1.b Troubleshooting static and dynamic EtherChannels.
+  - 3.1.c Configuring and verifying common STP modes (RSTP, MST) and enhancements such as root guard and BPDU guard.
+- **3.2 Layer 3 (context only)**
+  - How downstream Layer 3 designs will depend on a stable Layer 2 core.
+- **3.3 IP services (context only)**
+  - Where first-hop redundancy and multicast will later rely on predictable VLAN and trunk design.
 
 ### Project Tasks
 
-1. **Stabilise Layer 2**
-   - Choose a spanning tree mode (for example RSTP or MST) for the campus.  
-   - Define which switches act as primary and secondary roots for each VLAN or instance.  
-   - Decide where EtherChannels are appropriate and how they will be configured.
-2. **Design Layer 3 routing**
-   - Plan OSPF areas for campus, datacentre, and DR site.  
-   - Decide where summarisation will occur to reduce routing table size.  
-   - Identify where eBGP will be used to connect to the ISP and how routes will be exchanged.
-3. **Plan wireless infrastructure**
-   - Select AP deployment model (centralised controller, distributed, or branch friendly).  
-   - Describe how APs will discover and join controllers.  
-   - Define roaming behaviour between access points and across subnets.
-4. **Define IP services**
-   - Choose authoritative NTP sources and describe the NTP hierarchy.  
-   - Design NAT/PAT at the edge, including which internal ranges will be translated.  
-   - Decide which VLANs will use first hop redundancy and where the active gateways will live.  
-   - Identify any multicast use cases and where PIM or IGMP would be required.
-5. **Document the end-to-end flow**
-   - For a typical user, describe the full path of traffic from wireless or wired access through the campus, to datacentre applications, and out to the internet.
+1. **Capture the current Layer 2 state**
+   - List all access and distribution switches that participate in the campus.  
+   - For each uplink, record whether it is a simple trunk or part of an EtherChannel.  
+   - Identify which VLANs are intended to be present on each uplink.
+2. **Analyse Spanning Tree behaviour**
+   - Determine the current STP mode in use (for example PVST, RSTP, or MST).  
+   - Use show commands to find the root bridge per VLAN or instance.  
+   - Note any access-layer switches that have accidentally become root.
+3. **Design the target Layer 2 topology**
+   - Choose an STP mode that fits the campus size and vendor support.  
+   - Select primary and secondary STP roots for user, server, and management VLANs.  
+   - Define which links should be in EtherChannel bundles and which remain single trunks.
+4. **Standardise trunk and EtherChannel policies**
+   - Propose a standard trunk template (allowed VLANs, native VLAN, negotiation settings).  
+   - Define a standard EtherChannel configuration for access-to-distribution links.  
+   - Document how mis-matched channel settings will be detected and avoided.
+5. **Plan a migration approach**
+   - Describe the order in which you would change STP priorities and trunk settings.  
+   - Identify any maintenance windows or risk-reduction techniques (for example, changing one link at a time).  
+   - Prepare a short checklist to validate the campus after each step.
 
 ### Design Diagram (Text Form)
 
-Use this to build a logical diagram:
+Use this description to build a logical Layer 2 diagram:
 
-- **Campus**  
-  - Access switches connecting wired users and APs.  
-  - Distribution or core switches providing routing, with redundant links.  
-  - VLANs and SVIs for different user and server segments.
-- **Datacentre and DR**
-  - Routers or layer 3 switches connecting into the OSPF domain.  
-  - Optional separate area numbers and summarisation boundaries.
-- **Edge and ISP**
-  - WAN edge router(s) that run eBGP with the ISP.  
-  - NAT and first hop redundancy located here or on the core, depending on your design.
+- **Distribution layer**
+  - One or two core/distribution switches that will act as STP roots.  
+  - Uplinks to each access switch, grouped into EtherChannels where appropriate.
+- **Access layer**
+  - Access switches with ports assigned to user, server, and management VLANs.  
+  - Redundant uplinks back to the distribution layer, following the standard trunk template.
+- **Spanning Tree view**
+  - Highlight which switch is root for each VLAN or instance.  
+  - Show which links are forwarding and which are blocking under normal operation.
 
 ### Failure and What-If Analysis
 
-Consider:
+Consider and document the impact of the following events on your proposed design:
 
-- Spanning tree root failure in the main campus.  
-- Loss of an EtherChannel link bundle.  
-- OSPF adjacency failure between campus and datacentre.  
-- eBGP neighbour failure to the ISP.
+- A distribution switch that is the STP root fails unexpectedly.  
+- One physical member of an uplink EtherChannel goes down.  
+- A new access switch is accidentally connected with a default STP priority and all VLANs allowed on its uplink.  
+- A trunk is misconfigured to drop a critical user VLAN.
 
-For each, describe:
+For each event, describe:
 
-- Expected network behaviour.  
-- How users are impacted.  
-- Which design choices help contain or minimise the issue.
+- The expected Layer 2 convergence behaviour.  
+- How user connectivity is affected and for how long.  
+- Which design choices (for example, root guard, consistent trunk templates) help contain or prevent the issue.
 
 ### Expected Outcomes
 
 After completing this project you should be able to:
 
-- Explain your Layer 2 and Layer 3 design decisions to another engineer.  
-- Show how wireless, IP services, and routing work together to support applications.  
-- Identify where further improvements such as additional redundancy or better summarisation might be useful.
+- Explain and sketch a stable Layer 2 design for your campus access and distribution layers.  
+- Justify your STP mode and root placement to another engineer.  
+- Show how standardised trunk and EtherChannel policies reduce outage risk during change.  
+- Identify remaining Layer 2 risks that should be addressed in later Infrastructure labs.
 
 ### Reflection
 
 Reflect on:
 
-- Which parts of the infrastructure design were most constrained by existing hardware or topology.  
-- How you could phase the migration from the current state to your target design with minimal downtime.  
-- Which assurance and monitoring tools you would rely on during and after the migration.
+- Which parts of the existing Layer 2 design were most fragile and why.  
+- How your proposed changes improve operational predictability for future routing and services work.  
+- What monitoring or alerting you would put in place to quickly detect Layer 2 issues after deployment.
+
 
