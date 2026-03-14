@@ -20,7 +20,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Design Topics in Scope
 
-This project draws from the Infrastructure section of the syllabus (3.x), with strong focus on 3.1 Layer 2:
+This project draws from the Infrastructure section, with strong focus on 3.1 Layer 2:
 
 - **3.1 Layer 2**
   - 3.1.c Configuring and verifying common STP modes (RSTP, MST) and enhancements such as root guard and BPDU guard.  

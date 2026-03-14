@@ -20,7 +20,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Design Topics in Scope
 
-This project focuses on the multicast-related portion of the Infrastructure syllabus (3.3):
+This project focuses on the multicast-related portion of the Infrastructure  (3.3):
 
 - **3.3 IP services**
   - 3.3.d Describing multicast protocols such as RPF check, PIM SM, IGMP v2/v3, SSM, bidirectional PIM, and MSDP (at a design and behaviour level).  

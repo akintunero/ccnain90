@@ -20,7 +20,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Design Topics in Scope
 
-This project focuses on the IP services portion of the Infrastructure syllabus (3.3):
+This project focuses on the IP services portion of the Infrastructure  (3.3):
 
 - **3.3 IP services**
   - 3.3.b Configuring NAT/PAT for edge connectivity.  

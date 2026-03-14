@@ -20,7 +20,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Design Topics in Scope
 
-This project draws from the Infrastructure section of the syllabus (3.x), especially:
+This project draws from the Infrastructure section, especially:
 
 - **3.2 Layer 3**
   - 3.2.c Configuring and verifying eBGP between directly connected neighbours (best-path selection algorithm and neighbour relationships).  

@@ -20,7 +20,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Design Topics in Scope
 
-This project draws from the Infrastructure section of the syllabus (3.x), particularly:
+This project draws from the Infrastructure section, particularly:
 
 - **3.2 Layer 3**
   - 3.2.d Describing policy-based routing and when it is used.  

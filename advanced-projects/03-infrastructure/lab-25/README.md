@@ -20,7 +20,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Design Topics in Scope
 
-This project draws from the IP services part of the Infrastructure syllabus (3.3):
+This project draws from the IP services part of the Infrastructure  (3.3):
 
 - **3.3 IP services**
   - 3.3.c Configuring first-hop redundancy protocols such as HSRP and VRRP.  

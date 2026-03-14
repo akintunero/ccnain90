@@ -22,7 +22,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Design Topics in Scope
 
-This project draws from the Infrastructure section of the syllabus (3.x), focusing on Layer 3:
+This project draws from the Infrastructure section, focusing on Layer 3:
 
 - **3.2 Layer 3**
   - 3.2.a Comparing routing concepts of EIGRP and OSPF (advanced distance vector vs link state, load balancing, path selection, metrics, and area types).  

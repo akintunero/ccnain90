@@ -20,7 +20,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Design Topics in Scope
 
-This project draws primarily from the Infrastructure section of the syllabus (3.x), with emphasis on Layer 2:
+This project draws primarily from the Infrastructure section, with emphasis on Layer 2:
 
 - **3.1 Layer 2**
   - 3.1.a Troubleshooting static and dynamic 802.1Q trunking.

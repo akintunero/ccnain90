@@ -16,11 +16,11 @@ By the end of this project you should be able to:
 - Identify common misconfigurations in 802.1Q trunks and EtherChannels that lead to outages.  
 - Define a standard approach for building, verifying, and documenting campus uplink bundles.  
 - Create a troubleshooting flow that junior engineers can follow during EtherChannel or trunk incidents.  
-- Explain how these practices relate to the syllabus topics for Layer 2 infrastructure.
+- Explain how these practices relate to the  topics for Layer 2 infrastructure.
 
 ### Technologies and Design Topics in Scope
 
-This project draws from the Infrastructure section of the syllabus (3.x), focusing on Layer 2 fault isolation:
+This project draws from the Infrastructure section, focusing on Layer 2 fault isolation:
 
 - **3.1 Layer 2**
   - 3.1.a Troubleshooting static and dynamic 802.1Q trunking.  

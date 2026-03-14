@@ -16,7 +16,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Design Topics in Scope
 
-This project touches on all parts of the Infrastructure syllabus (3.x):
+This project touches on all parts of the Infrastructure  (3.x):
 
 - **3.1 Layer 2** – Overall VLAN, trunking, EtherChannel, and STP approach.  
 - **3.2 Layer 3** – OSPF/EIGRP decisions, area structure, eBGP edge, and any PBR considerations.  

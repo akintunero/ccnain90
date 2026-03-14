@@ -20,7 +20,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Design Topics in Scope
 
-This project draws from the Infrastructure section of the syllabus (3.x), focusing on wireless within the broader infrastructure:
+This project draws from the Infrastructure section, focusing on wireless within the broader infrastructure:
 
 - **3.3 IP services and wireless context**
   - Wireless deployment models, RF basics, AP modes, roaming, and client troubleshooting (as part of the overall infrastructure story).  
