@@ -1,7 +1,7 @@
-## Lab 21 – Single-Site Routing and WAN Edge
+## Lab 24 – Migrating Static Routes to Dynamic Routing
 
-### Scenario – Headquarters with ISP Edge
-You are deploying routing for a corporate headquarters that connects to a single ISP. The LAN is already segmented into multiple VLANs, and your task is to implement inter-VLAN routing, a routed WAN edge, and basic static or dynamic routing towards the ISP. This lab is the first step into CCNA routing and WAN concepts.
+### Scenario – Transition to a Simple Dynamic Protocol
+Static routes between HQ and branch are becoming hard to maintain. Your task is to introduce a single‑area dynamic routing protocol at CCNA level, compare behaviour with static routes, and plan the cutover.
 
 ### Network Architecture Overview
 - **Topology type**: Single-site headquarters with a dedicated WAN edge router.

@@ -1,7 +1,7 @@
-## Lab 11 – Campus Switching and Redundancy Foundations
+## Lab 18 – Voice VLAN and QoS Edge Preparation
 
-### Scenario – Multi-Floor Office Campus
-You are the network engineer for a mid-sized company that has expanded into a second floor. The organisation wants a resilient Layer 2 access layer with redundant uplinks to a distribution switch, basic VLAN segmentation for users and voice, and loop-free operation. This lab introduces CCNA-level switching features and redundancy concepts building on the earlier foundational labs.
+### Scenario – Preparing Switching for Voice
+A VoIP rollout is planned across the campus. Your task is to ensure that access switches are correctly prepared for voice VLANs and that the design can support basic QoS markings at the edge in later labs.
 
 ### Network Architecture Overview
 - **Topology type**: Small campus with one distribution switch and two access switches.

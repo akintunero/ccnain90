@@ -1,7 +1,7 @@
-## Lab 01 – Small Office CCNA Foundations
+## Lab 10 – Readiness Review for Switching and Redundancy
 
-### Scenario – Small IT Consulting Office
-You have been engaged as a network engineer for a small IT consulting office with fewer than 25 users. The business is migrating from unmanaged switches and a consumer router to an enterprise-ready, Cisco-based LAN. Management expects a stable IPv4 addressing scheme, basic VLAN segmentation for users and management, and consistent device naming aligned with CCNA best practices.
+### Scenario – Handing Off the Foundation to the Campus Team
+You are handing the small office design to a team that will introduce campus switching and redundancy. Your task is to review the current state, highlight any limitations, and summarise what must stay consistent as the network grows in the next phase.
 
 ### Network Architecture Overview
 - **Topology type**: Single-site small office LAN with one access switch and one integrated router/firewall.

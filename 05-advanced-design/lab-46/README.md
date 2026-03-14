@@ -1,7 +1,7 @@
 ## Lab 46 – Multi-Site Design, Convergence Planning, and Automation
 
 ### Scenario – Multi-Site Enterprise Modernisation with Automation
-You are the lead network architect for an enterprise that is consolidating several independently managed sites into a single, consistently designed network. Existing CCNA-level technologies (VLANs, routing, WAN, and security) are in place but inconsistently implemented. Your objectives in this lab are to produce a high-level multi-site design, reason about routing and failover convergence, and outline an automation-ready approach for deploying common configurations.
+You are consolidating several independently managed sites into a single, consistently designed network. Your task is to define a high‑level multi‑site design, reason about routing and failover convergence, and outline where automation will help keep configurations consistent.
 
 ### Network Architecture Overview
 - **Scope**: Headquarters plus multiple branches and remote offices.

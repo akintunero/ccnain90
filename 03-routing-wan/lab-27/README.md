@@ -1,7 +1,7 @@
-## Lab 21 – Single-Site Routing and WAN Edge
+## Lab 27 – Branch Redundancy and Failover
 
-### Scenario – Headquarters with ISP Edge
-You are deploying routing for a corporate headquarters that connects to a single ISP. The LAN is already segmented into multiple VLANs, and your task is to implement inter-VLAN routing, a routed WAN edge, and basic static or dynamic routing towards the ISP. This lab is the first step into CCNA routing and WAN concepts.
+### Scenario – Improving Branch Availability
+A branch suffers frequent link outages. Your task is to evaluate simple redundancy options (backup link, alternate path via another site) and describe how routing will react during failures and recovery.
 
 ### Network Architecture Overview
 - **Topology type**: Single-site headquarters with a dedicated WAN edge router.

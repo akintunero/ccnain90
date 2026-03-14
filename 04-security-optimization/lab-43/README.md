@@ -1,7 +1,7 @@
-## Lab 36 – Branch Security, Monitoring, and Incident Response
+## Lab 43 – Security Incident Walkthrough
 
-### Scenario – Securing a Branch Office with HQ Dependencies
-You are tasked with hardening the network of a branch office that connects back to headquarters over a WAN link. The basic routing and switching are already in place. Your focus in this lab is to implement CCNA-level security controls, visibility, and basic incident-response procedures: access control lists (ACLs), device hardening, logging, monitoring, and documenting how to respond when security issues arise.
+### Scenario – Analysing a Simulated Security Event
+A simulated incident has occurred involving suspicious access from a branch user VLAN. Your task is to walk through what happened using the existing logging and ACL design, and propose improvements to reduce impact next time.
 
 ### Network Architecture Overview
 - **Topology type**: Branch office with a routed WAN connection to HQ and upstream internet via HQ.

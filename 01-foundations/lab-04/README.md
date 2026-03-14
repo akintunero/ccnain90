@@ -1,7 +1,7 @@
-## Lab 01 – Small Office CCNA Foundations
+## Lab 04 – Basic Device Access and Management
 
-### Scenario – Small IT Consulting Office
-You have been engaged as a network engineer for a small IT consulting office with fewer than 25 users. The business is migrating from unmanaged switches and a consumer router to an enterprise-ready, Cisco-based LAN. Management expects a stable IPv4 addressing scheme, basic VLAN segmentation for users and management, and consistent device naming aligned with CCNA best practices.
+### Scenario – Securing Initial Device Management
+The network has been running for a few weeks with default credentials still in place. Your task is to introduce basic device management hardening: hostnames, secure management access, and a simple management plan that future engineers can follow.
 
 ### Network Architecture Overview
 - **Topology type**: Single-site small office LAN with one access switch and one integrated router/firewall.

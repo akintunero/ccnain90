@@ -1,7 +1,7 @@
-## Lab 30 – Dual-Site Routing, Convergence, and WAN Edge
+## Lab 32 – Branch Internet Breakout vs Centralised Internet
 
-### Scenario – Headquarters with Branch and ISP Edge
-You are deploying routing for a corporate headquarters that connects to both a remote branch and a single ISP. The LAN is already segmented into multiple VLANs, and your task is to implement inter-VLAN routing, routed WAN edges, and introduce basic dynamic routing between HQ and the branch. This lab targets the upper bound of CCNA routing skills, including convergence behaviour during failures.
+### Scenario – Deciding Where Internet Traffic Exits
+The business is debating whether branches should use local internet breakout or centralised access via HQ. Your task is to model both options at a CCNA level and document routing implications for each.
 
 ### Network Architecture Overview
 - **Topology type**: HQ and single branch, each with a dedicated WAN edge router.

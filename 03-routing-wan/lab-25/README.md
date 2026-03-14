@@ -1,7 +1,7 @@
-## Lab 21 – Single-Site Routing and WAN Edge
+## Lab 25 – Summarisation and Route Filtering
 
-### Scenario – Headquarters with ISP Edge
-You are deploying routing for a corporate headquarters that connects to a single ISP. The LAN is already segmented into multiple VLANs, and your task is to implement inter-VLAN routing, a routed WAN edge, and basic static or dynamic routing towards the ISP. This lab is the first step into CCNA routing and WAN concepts.
+### Scenario – Cleaning Up the Routing Table
+As more VLANs are added at HQ, route tables are growing. Your task is to design simple IPv4 summarisation and, where appropriate, basic route filtering so branch routers see only the prefixes they need.
 
 ### Network Architecture Overview
 - **Topology type**: Single-site headquarters with a dedicated WAN edge router.

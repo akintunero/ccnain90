@@ -1,7 +1,7 @@
-## Lab 01 – Small Office CCNA Foundations
+## Lab 02 – Addressing and Default Gateway Validation
 
-### Scenario – Small IT Consulting Office
-You have been engaged as a network engineer for a small IT consulting office with fewer than 25 users. The business is migrating from unmanaged switches and a consumer router to an enterprise-ready, Cisco-based LAN. Management expects a stable IPv4 addressing scheme, basic VLAN segmentation for users and management, and consistent device naming aligned with CCNA best practices.
+### Scenario – Verifying the New Small Office LAN
+The small consulting office has gone live on the new LAN, but some users report intermittent connectivity. Your task is to verify the IPv4 addressing plan, confirm default gateway settings on hosts, and document any corrections needed before scaling further.
 
 ### Network Architecture Overview
 - **Topology type**: Single-site small office LAN with one access switch and one integrated router/firewall.

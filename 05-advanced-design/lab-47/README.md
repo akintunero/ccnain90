@@ -1,7 +1,7 @@
-## Lab 46 – Multi-Site Design, Convergence Planning, and Automation
+## Lab 47 – Multi-Site Services and Shared Infrastructure
 
-### Scenario – Multi-Site Enterprise Modernisation with Automation
-You are the lead network architect for an enterprise that is consolidating several independently managed sites into a single, consistently designed network. Existing CCNA-level technologies (VLANs, routing, WAN, and security) are in place but inconsistently implemented. Your objectives in this lab are to produce a high-level multi-site design, reason about routing and failover convergence, and outline an automation-ready approach for deploying common configurations.
+### Scenario – Designing Shared Services Across Sites
+The enterprise wants to centralise services such as DNS, DHCP, and key applications. Your task is to describe how shared services will be made available across sites, how routing and security support this, and what trade‑offs exist.
 
 ### Network Architecture Overview
 - **Scope**: Headquarters plus multiple branches and remote offices.

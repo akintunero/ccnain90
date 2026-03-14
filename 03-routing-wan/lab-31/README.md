@@ -1,7 +1,7 @@
-## Lab 30 – Dual-Site Routing, Convergence, and WAN Edge
+## Lab 31 – Dual-Site Load Sharing and Path Preference
 
-### Scenario – Headquarters with Branch and ISP Edge
-You are deploying routing for a corporate headquarters that connects to both a remote branch and a single ISP. The LAN is already segmented into multiple VLANs, and your task is to implement inter-VLAN routing, routed WAN edges, and introduce basic dynamic routing between HQ and the branch. This lab targets the upper bound of CCNA routing skills, including convergence behaviour during failures.
+### Scenario – Tuning Traffic Between HQ and Branch
+After basic dual‑site routing is in place, management wants more predictable path usage. Your task is to plan how certain VLANs or applications prefer specific paths, and how failover should behave when one path is lost.
 
 ### Network Architecture Overview
 - **Topology type**: HQ and single branch, each with a dedicated WAN edge router.

@@ -1,7 +1,7 @@
 ## Lab 36 – Branch Security, Monitoring, and Incident Response
 
 ### Scenario – Securing a Branch Office with HQ Dependencies
-You are tasked with hardening the network of a branch office that connects back to headquarters over a WAN link. The basic routing and switching are already in place. Your focus in this lab is to implement CCNA-level security controls, visibility, and basic incident-response procedures: access control lists (ACLs), device hardening, logging, monitoring, and documenting how to respond when security issues arise.
+You are hardening a branch office that relies on HQ for many services. Your focus is to introduce CCNA‑level security controls, logging, and a basic incident‑response approach aligned with the existing routing and switching design.
 
 ### Network Architecture Overview
 - **Topology type**: Branch office with a routed WAN connection to HQ and upstream internet via HQ.

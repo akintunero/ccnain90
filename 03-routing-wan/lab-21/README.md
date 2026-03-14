@@ -1,7 +1,7 @@
 ## Lab 21 – Single-Site Routing and WAN Edge
 
 ### Scenario – Headquarters with ISP Edge
-You are deploying routing for a corporate headquarters that connects to a single ISP. The LAN is already segmented into multiple VLANs, and your task is to implement inter-VLAN routing, a routed WAN edge, and basic static or dynamic routing towards the ISP. This lab is the first step into CCNA routing and WAN concepts.
+You are enabling inter‑VLAN routing and a single WAN edge for headquarters. Your task is to connect the routed edge to an ISP, choose between static or simple dynamic routing, and verify reachability end‑to‑end.
 
 ### Network Architecture Overview
 - **Topology type**: Single-site headquarters with a dedicated WAN edge router.

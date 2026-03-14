@@ -1,7 +1,7 @@
-## Lab 11 – Campus Switching and Redundancy Foundations
+## Lab 12 – Access Layer Port Roles and VLAN Assignment
 
-### Scenario – Multi-Floor Office Campus
-You are the network engineer for a mid-sized company that has expanded into a second floor. The organisation wants a resilient Layer 2 access layer with redundant uplinks to a distribution switch, basic VLAN segmentation for users and voice, and loop-free operation. This lab introduces CCNA-level switching features and redundancy concepts building on the earlier foundational labs.
+### Scenario – Labelling and Assigning Campus Ports
+The campus has expanded and patching has become messy. Your task is to define clear port roles on the access switches, assign the correct VLANs for users, voice, servers, and management, and ensure documentation matches the live configuration.
 
 ### Network Architecture Overview
 - **Topology type**: Small campus with one distribution switch and two access switches.

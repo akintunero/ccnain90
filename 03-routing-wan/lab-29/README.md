@@ -1,7 +1,7 @@
-## Lab 21 – Single-Site Routing and WAN Edge
+## Lab 29 – Routing Documentation and Operational Runbook
 
-### Scenario – Headquarters with ISP Edge
-You are deploying routing for a corporate headquarters that connects to a single ISP. The LAN is already segmented into multiple VLANs, and your task is to implement inter-VLAN routing, a routed WAN edge, and basic static or dynamic routing towards the ISP. This lab is the first step into CCNA routing and WAN concepts.
+### Scenario – Building a Simple Routing Runbook
+Operations needs clear guidance on the WAN and routing design. Your task is to document key prefixes, failover behaviour, and standard verification commands in a format that junior engineers can follow during incidents.
 
 ### Network Architecture Overview
 - **Topology type**: Single-site headquarters with a dedicated WAN edge router.

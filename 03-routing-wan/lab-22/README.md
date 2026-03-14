@@ -1,7 +1,7 @@
-## Lab 21 – Single-Site Routing and WAN Edge
+## Lab 22 – Default Routes and Internet Access Policy
 
-### Scenario – Headquarters with ISP Edge
-You are deploying routing for a corporate headquarters that connects to a single ISP. The LAN is already segmented into multiple VLANs, and your task is to implement inter-VLAN routing, a routed WAN edge, and basic static or dynamic routing towards the ISP. This lab is the first step into CCNA routing and WAN concepts.
+### Scenario – Fine‑Tuning Routing Towards the ISP
+The ISP connection is up but traffic patterns are unclear. Your task is to refine default routing towards the ISP, document which prefixes should be advertised internally, and verify that only authorised networks have internet access.
 
 ### Network Architecture Overview
 - **Topology type**: Single-site headquarters with a dedicated WAN edge router.

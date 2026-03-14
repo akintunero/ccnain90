@@ -1,7 +1,7 @@
-## Lab 01 – Small Office CCNA Foundations
+## Lab 06 – Introducing a Small Server Segment
 
-### Scenario – Small IT Consulting Office
-You have been engaged as a network engineer for a small IT consulting office with fewer than 25 users. The business is migrating from unmanaged switches and a consumer router to an enterprise-ready, Cisco-based LAN. Management expects a stable IPv4 addressing scheme, basic VLAN segmentation for users and management, and consistent device naming aligned with CCNA best practices.
+### Scenario – Adding Servers to the Foundation Design
+The business is adding a small internal application and file server. Your task is to integrate a server VLAN and subnet into the existing design, update gateway configuration, and verify that users and management stations can reach the new services.
 
 ### Network Architecture Overview
 - **Topology type**: Single-site small office LAN with one access switch and one integrated router/firewall.

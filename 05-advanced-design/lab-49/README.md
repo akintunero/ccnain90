@@ -1,7 +1,7 @@
-## Lab 46 – Multi-Site Design, Convergence Planning, and Automation
+## Lab 49 – Operational Runbooks and Change Governance
 
-### Scenario – Multi-Site Enterprise Modernisation with Automation
-You are the lead network architect for an enterprise that is consolidating several independently managed sites into a single, consistently designed network. Existing CCNA-level technologies (VLANs, routing, WAN, and security) are in place but inconsistently implemented. Your objectives in this lab are to produce a high-level multi-site design, reason about routing and failover convergence, and outline an automation-ready approach for deploying common configurations.
+### Scenario – Documenting How to Operate the Multi‑Site Network
+Operations teams need clear guidance for day‑to‑day work. Your task is to produce an outline for operational runbooks and change governance that fits the multi‑site design at a CCNA‑friendly level of detail.
 
 ### Network Architecture Overview
 - **Scope**: Headquarters plus multiple branches and remote offices.

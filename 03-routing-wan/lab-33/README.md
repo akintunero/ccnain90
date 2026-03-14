@@ -1,7 +1,7 @@
-## Lab 30 – Dual-Site Routing, Convergence, and WAN Edge
+## Lab 33 – WAN Edge Policy and Basic QoS Planning
 
-### Scenario – Headquarters with Branch and ISP Edge
-You are deploying routing for a corporate headquarters that connects to both a remote branch and a single ISP. The LAN is already segmented into multiple VLANs, and your task is to implement inter-VLAN routing, routed WAN edges, and introduce basic dynamic routing between HQ and the branch. This lab targets the upper bound of CCNA routing skills, including convergence behaviour during failures.
+### Scenario – Planning for Application‑Aware Routing
+Voice and critical applications now share the WAN. Your task is to outline how simple policy‑based decisions and QoS markings at the edge could protect important traffic, without implementing full QoS configs.
 
 ### Network Architecture Overview
 - **Topology type**: HQ and single branch, each with a dedicated WAN edge router.

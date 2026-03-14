@@ -1,7 +1,7 @@
-## Lab 11 – Campus Switching and Redundancy Foundations
+## Lab 20 – Campus Design Summary and Handoff
 
-### Scenario – Multi-Floor Office Campus
-You are the network engineer for a mid-sized company that has expanded into a second floor. The organisation wants a resilient Layer 2 access layer with redundant uplinks to a distribution switch, basic VLAN segmentation for users and voice, and loop-free operation. This lab introduces CCNA-level switching features and redundancy concepts building on the earlier foundational labs.
+### Scenario – Summarising the Switching Design
+You are preparing a short switching design summary for the routing and WAN team. Your task is to capture VLANs, trunking strategy, redundancy mechanisms, and any open issues they must consider when adding Layer 3 features.
 
 ### Network Architecture Overview
 - **Topology type**: Small campus with one distribution switch and two access switches.

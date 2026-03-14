@@ -1,7 +1,7 @@
-## Lab 46 – Multi-Site Design, Convergence Planning, and Automation
+## Lab 48 – Growth, Capacity, and Resilience Planning
 
-### Scenario – Multi-Site Enterprise Modernisation with Automation
-You are the lead network architect for an enterprise that is consolidating several independently managed sites into a single, consistently designed network. Existing CCNA-level technologies (VLANs, routing, WAN, and security) are in place but inconsistently implemented. Your objectives in this lab are to produce a high-level multi-site design, reason about routing and failover convergence, and outline an automation-ready approach for deploying common configurations.
+### Scenario – Planning for Future Scale and Failure
+Traffic and user counts are projected to grow significantly. Your task is to evaluate whether the current multi‑site design will scale, what capacity and resilience upgrades may be needed, and how to prioritise them.
 
 ### Network Architecture Overview
 - **Scope**: Headquarters plus multiple branches and remote offices.

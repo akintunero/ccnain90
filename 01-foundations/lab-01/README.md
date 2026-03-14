@@ -1,7 +1,7 @@
 ## Lab 01 – Small Office CCNA Foundations
 
 ### Scenario – Small IT Consulting Office
-You have been engaged as a network engineer for a small IT consulting office with fewer than 25 users. The business is migrating from unmanaged switches and a consumer router to an enterprise-ready, Cisco-based LAN. Management expects a stable IPv4 addressing scheme, basic VLAN segmentation for users and management, and consistent device naming aligned with CCNA best practices.
+You are designing the first structured LAN for a small IT consulting office. Your focus is on choosing a clean IPv4 addressing plan, basic VLAN separation, and clear device naming so future labs can build on this baseline.
 
 ### Network Architecture Overview
 - **Topology type**: Single-site small office LAN with one access switch and one integrated router/firewall.

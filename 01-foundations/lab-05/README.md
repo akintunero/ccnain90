@@ -1,7 +1,7 @@
-## Lab 01 – Small Office CCNA Foundations
+## Lab 05 – Troubleshooting Layer 2 and IP Basics
 
-### Scenario – Small IT Consulting Office
-You have been engaged as a network engineer for a small IT consulting office with fewer than 25 users. The business is migrating from unmanaged switches and a consumer router to an enterprise-ready, Cisco-based LAN. Management expects a stable IPv4 addressing scheme, basic VLAN segmentation for users and management, and consistent device naming aligned with CCNA best practices.
+### Scenario – Fixing Miswired Ports and Wrong IPs
+A new junior technician has patched several devices into the wrong switchports and used incorrect IP settings. Your task is to trace connectivity issues at Layer 2 and Layer 3, correct VLAN membership and IP parameters, and document the fixes.
 
 ### Network Architecture Overview
 - **Topology type**: Single-site small office LAN with one access switch and one integrated router/firewall.

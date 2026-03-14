@@ -1,7 +1,7 @@
-## Lab 11 – Campus Switching and Redundancy Foundations
+## Lab 15 – Access Port Security and Edge Controls
 
-### Scenario – Multi-Floor Office Campus
-You are the network engineer for a mid-sized company that has expanded into a second floor. The organisation wants a resilient Layer 2 access layer with redundant uplinks to a distribution switch, basic VLAN segmentation for users and voice, and loop-free operation. This lab introduces CCNA-level switching features and redundancy concepts building on the earlier foundational labs.
+### Scenario – Locking Down User Edge Ports
+Unmanaged devices have started appearing on user ports. Your task is to define and apply simple port security and edge controls (such as BPDU Guard) that align with CCNA-level best practices for the access layer.
 
 ### Network Architecture Overview
 - **Topology type**: Small campus with one distribution switch and two access switches.

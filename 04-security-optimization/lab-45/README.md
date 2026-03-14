@@ -1,7 +1,7 @@
-## Lab 36 – Branch Security, Monitoring, and Incident Response
+## Lab 45 – Security and Optimisation Phase Summary
 
-### Scenario – Securing a Branch Office with HQ Dependencies
-You are tasked with hardening the network of a branch office that connects back to headquarters over a WAN link. The basic routing and switching are already in place. Your focus in this lab is to implement CCNA-level security controls, visibility, and basic incident-response procedures: access control lists (ACLs), device hardening, logging, monitoring, and documenting how to respond when security issues arise.
+### Scenario – Summarising Security and Visibility Work
+You are preparing a security and optimisation summary for leadership. Your task is to capture the main controls added in this phase, remaining risks, and how these decisions support the final advanced design labs.
 
 ### Network Architecture Overview
 - **Topology type**: Branch office with a routed WAN connection to HQ and upstream internet via HQ.

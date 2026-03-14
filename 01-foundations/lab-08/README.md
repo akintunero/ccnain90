@@ -1,7 +1,7 @@
-## Lab 01 – Small Office CCNA Foundations
+## Lab 08 – Internet Edge Readiness Check
 
-### Scenario – Small IT Consulting Office
-You have been engaged as a network engineer for a small IT consulting office with fewer than 25 users. The business is migrating from unmanaged switches and a consumer router to an enterprise-ready, Cisco-based LAN. Management expects a stable IPv4 addressing scheme, basic VLAN segmentation for users and management, and consistent device naming aligned with CCNA best practices.
+### Scenario – Verifying the Edge Before Going Live
+Before internet-facing services are enabled, you have been asked to double-check the LAN edge: default routes, NAT design, and basic reachability. Your task is to validate that the foundation lab network is ready to safely reach an upstream ISP in later labs.
 
 ### Network Architecture Overview
 - **Topology type**: Single-site small office LAN with one access switch and one integrated router/firewall.

@@ -1,7 +1,7 @@
-## Lab 11 – Campus Switching and Redundancy Foundations
+## Lab 17 – Campus Switching Health Check
 
-### Scenario – Multi-Floor Office Campus
-You are the network engineer for a mid-sized company that has expanded into a second floor. The organisation wants a resilient Layer 2 access layer with redundant uplinks to a distribution switch, basic VLAN segmentation for users and voice, and loop-free operation. This lab introduces CCNA-level switching features and redundancy concepts building on the earlier foundational labs.
+### Scenario – Verifying Campus Layer 2 Stability
+After several incremental changes, management wants assurance that the campus switching layer is stable. Your task is to verify VLANs, STP state, and EtherChannel status, and to document any risks before routing features are added in later labs.
 
 ### Network Architecture Overview
 - **Topology type**: Small campus with one distribution switch and two access switches.

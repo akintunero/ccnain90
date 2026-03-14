@@ -1,7 +1,7 @@
-## Lab 11 – Campus Switching and Redundancy Foundations
+## Lab 19 – Isolating a Layer 2 Fault
 
-### Scenario – Multi-Floor Office Campus
-You are the network engineer for a mid-sized company that has expanded into a second floor. The organisation wants a resilient Layer 2 access layer with redundant uplinks to a distribution switch, basic VLAN segmentation for users and voice, and loop-free operation. This lab introduces CCNA-level switching features and redundancy concepts building on the earlier foundational labs.
+### Scenario – Troubleshooting a Campus Switching Incident
+An office area has lost connectivity after a change. Your task is to walk through a structured Layer 2 troubleshooting process, identify the misconfiguration (such as a wrong VLAN, disabled trunk, or err-disabled port), and propose a fix.
 
 ### Network Architecture Overview
 - **Topology type**: Small campus with one distribution switch and two access switches.

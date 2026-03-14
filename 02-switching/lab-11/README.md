@@ -1,7 +1,7 @@
 ## Lab 11 – Campus Switching and Redundancy Foundations
 
 ### Scenario – Multi-Floor Office Campus
-You are the network engineer for a mid-sized company that has expanded into a second floor. The organisation wants a resilient Layer 2 access layer with redundant uplinks to a distribution switch, basic VLAN segmentation for users and voice, and loop-free operation. This lab introduces CCNA-level switching features and redundancy concepts building on the earlier foundational labs.
+You are designing the first small campus with a distribution layer and multiple access switches. Your focus is to provide redundant uplinks, basic VLAN segmentation, and stable Spanning Tree behaviour across two floors.
 
 ### Network Architecture Overview
 - **Topology type**: Small campus with one distribution switch and two access switches.

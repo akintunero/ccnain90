@@ -1,7 +1,7 @@
-## Lab 11 – Campus Switching and Redundancy Foundations
+## Lab 16 – Guest and IoT VLAN Integration
 
-### Scenario – Multi-Floor Office Campus
-You are the network engineer for a mid-sized company that has expanded into a second floor. The organisation wants a resilient Layer 2 access layer with redundant uplinks to a distribution switch, basic VLAN segmentation for users and voice, and loop-free operation. This lab introduces CCNA-level switching features and redundancy concepts building on the earlier foundational labs.
+### Scenario – Introducing Guest and IoT Segments
+The company wants to add guest Wi‑Fi and a small set of IoT devices. Your task is to extend the VLAN and switchport plan to include guest and IoT segments while keeping them separated from core user and server traffic.
 
 ### Network Architecture Overview
 - **Topology type**: Small campus with one distribution switch and two access switches.

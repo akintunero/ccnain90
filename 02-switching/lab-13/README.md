@@ -1,7 +1,7 @@
-## Lab 11 – Campus Switching and Redundancy Foundations
+## Lab 13 – Spanning Tree Root and Topology Control
 
-### Scenario – Multi-Floor Office Campus
-You are the network engineer for a mid-sized company that has expanded into a second floor. The organisation wants a resilient Layer 2 access layer with redundant uplinks to a distribution switch, basic VLAN segmentation for users and voice, and loop-free operation. This lab introduces CCNA-level switching features and redundancy concepts building on the earlier foundational labs.
+### Scenario – Choosing a Predictable STP Root
+Random Spanning Tree elections are causing suboptimal paths in the campus. Your task is to select and document a primary and secondary STP root, adjust priorities, and confirm that the Layer 2 topology converges as intended.
 
 ### Network Architecture Overview
 - **Topology type**: Small campus with one distribution switch and two access switches.

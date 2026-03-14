@@ -1,7 +1,7 @@
-## Lab 36 – Branch Security, Monitoring, and Incident Response
+## Lab 44 – Security Baseline Validation
 
-### Scenario – Securing a Branch Office with HQ Dependencies
-You are tasked with hardening the network of a branch office that connects back to headquarters over a WAN link. The basic routing and switching are already in place. Your focus in this lab is to implement CCNA-level security controls, visibility, and basic incident-response procedures: access control lists (ACLs), device hardening, logging, monitoring, and documenting how to respond when security issues arise.
+### Scenario – Checking the Network Against a Simple Baseline
+Management wants to know whether the network meets a basic security baseline. Your task is to compare the current design against a small checklist for access control, device hardening, and monitoring, and document gaps.
 
 ### Network Architecture Overview
 - **Topology type**: Branch office with a routed WAN connection to HQ and upstream internet via HQ.
