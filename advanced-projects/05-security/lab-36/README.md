@@ -1,103 +1,96 @@
-## Advanced Security Lab 34 – Hardening a Campus Edge and Access Layer
+## Advanced Security Lab 36 – AAA Policy Design for Devices and Users
 
 ### Scenario
-Your current campus network was built with basic connectivity in mind, not security. Devices still use simple line passwords, there is little consistency in AAA, and ACLs have been added reactively over time. Wireless security is a mix of pre shared keys and open guest SSIDs, and there is no clear design for network access control.
+Your organisation has decided to centralise authentication and authorisation using AAA for both **network devices** and **end users**. At the moment:
 
-Your CISO has asked you to propose a **security hardening plan** for the campus edge and access layer that:
+- Some devices still rely on local usernames and passwords.  
+- Different teams operate separate RADIUS/TACACS+ servers with inconsistent policies.  
+- Wired and wireless user access is not aligned to a common identity model.
 
-- Improves device and management plane security.
-- Introduces consistent access control using ACLs and QoS or CoPP where needed.
-- Strengthens wireless security for corporate and guest users.
-- Lays the groundwork for identity based access control using 802.1X and related methods.
+The CISO wants a unified AAA strategy that improves security and simplifies operations across campus, branches, and remote access. In this lab you will design AAA policies for device administration and user access, and show how they fit into your broader security architecture.
 
 ### Project Objectives
 
 By the end of this project you should be able to:
 
-- Describe how device access control will be implemented with AAA.  
-- Propose an ACL strategy that protects infrastructure and enforces policy.  
-- Explain how CoPP or similar techniques can protect the control plane.  
-- Design wireless security profiles appropriate for corporate, BYOD, and guest.  
-- Show where network access control methods such as 802.1X, MAB, and WebAuth will be used.
+- Design AAA policies for network device administration using TACACS+ or RADIUS.  
+- Define AAA policies for user access across wired and wireless networks.  
+- Show how AAA ties into network access control mechanisms such as 802.1X, MAB, and WebAuth.  
+- Explain how AAA design supports auditing, compliance, and incident response.
 
 ### Technologies and Topics in Scope
 
-This project maps to the ENCOR Security section:
+This project draws from the Security section of the syllabus (5.x):
 
-- Device access control and line protection.  
-- AAA based authentication and authorization.  
-- Infrastructure ACLs and control plane policing.  
-- REST API security at a high level.  
-- Wireless security: EAP, WebAuth, PSK.  
-- Components of network security design:
-  - Threat defence.
-  - Endpoint security.
-  - Next generation firewall placement.
-  - TrustSec and MACsec concepts.
-  - Network access control with 802.1X, MAB, and WebAuth.
+- **5.1 Device access control**
+  - 5.1.a Lines and local user authentication in a AAA context.  
+  - 5.1.b Authentication and authorisation using AAA servers.  
+- **5.4 Components of network security design**
+  - 5.4.a Threat defence and logging from a AAA perspective.  
+  - 5.4.d How TrustSec or similar technologies might consume AAA-derived attributes.
 
 ### Project Tasks
 
-1. **Secure device access**
-   - Define how administrators will log into routers, switches, and controllers (for example SSH with AAA).  
-   - Decide which local accounts, if any, will remain for break glass scenarios.  
-   - Plan line and VTY protections, including session limits and timeouts.
-2. **Design AAA and authorization**
-   - Choose an AAA model (for example TACACS+ for device admin, RADIUS for user auth).  
-   - Describe how roles or command authorization will be used for network administrators.  
-   - Decide where AAA servers will reside and how devices will reach them.
-3. **Plan infrastructure ACLs and CoPP**
-   - Identify management and control plane traffic that should be permitted to devices.  
-   - Define ACLs that restrict who can reach device management interfaces.  
-   - Outline how CoPP will protect control protocols from abuse.
-4. **Define wireless security profiles**
-   - Create profiles for:
-     - Corporate devices (for example 802.1X with EAP).  
-     - BYOD (for example WebAuth or PSK with additional controls).  
-     - Guest (captured in a guest VLAN with appropriate internet access only).
-   - Explain which authentication methods each profile will use and why.
-5. **Design network access control**
-   - Decide where 802.1X, MAB, and WebAuth will be applied (for example wired access ports, wireless SSIDs, guest portals).  
-   - Show how the access layer will interact with central policy engines or firewalls.
+1. **Assess current AAA usage**
+   - Inventory which devices use central AAA today and which rely on local credentials.  
+   - Identify existing AAA servers, protocols (TACACS+/RADIUS), and policies in use.  
+   - Note any overlapping or conflicting policies across teams or sites.
+2. **Design AAA for device administration**
+   - Choose a standard approach for device admin AAA (for example TACACS+ for command authorisation).  
+   - Define roles or privilege levels for different administrator types (for example read-only, operator, engineer).  
+   - Decide how logs and accounting records will be stored for auditing.
+3. **Design AAA for user access**
+   - Decide how users will authenticate to the network (for example 802.1X for corporate, WebAuth/portal for guests).  
+   - Map user groups (for example employees, contractors, guests) to appropriate policies and VLANs or SGTs.  
+   - Consider how remote users (VPN) fit into the same identity framework.
+4. **Integrate AAA with network access control**
+   - Show how AAA servers interact with switches, wireless controllers, and VPN gateways.  
+   - Describe how attributes from AAA (for example group membership, posture) can influence access control decisions.  
+   - Outline how AAA failures will be handled (for example fail-open vs fail-closed, limited access VLANs).
+5. **Document operational and security considerations**
+   - Define procedures for creating, modifying, and removing AAA policies.  
+   - Describe how AAA-related incidents (for example account lockouts, misconfigurations) will be detected and resolved.  
+   - Suggest periodic reviews of AAA logs to detect suspicious activity.
 
 ### Design Diagram (Text Form)
 
 At a high level, describe:
 
-- Where AAA servers sit relative to the campus core.  
-- How access switches are connected and where authenticated access will occur.  
-- Where firewalls and other threat defence devices are placed.  
-- How guest and corporate wireless traffic flows through the network.
+- The placement of AAA servers relative to campus, branch, and VPN infrastructure.  
+- How devices (switches, routers, controllers, VPN gateways) communicate with AAA.  
+- The flow of user authentication from endpoint to network device to AAA server and back.
 
-Use this as the basis for a drawing that highlights security control points, not just connectivity.
+Use this as the basis for a diagram that highlights identity and policy decision points.
 
 ### Failure and What-If Analysis
 
 Consider:
 
-- What happens when AAA servers are unreachable.  
-- How users are affected if 802.1X fails or misbehaves.  
-- What happens to management access when infrastructure ACLs are misconfigured.
+- Outage of a primary AAA server or loss of connectivity to the AAA cluster.  
+- Misconfigured AAA policies that deny access to administrators or legitimate users.  
+- Attackers attempting to brute-force accounts or misuse stolen credentials.  
+- A need to quickly revoke access for a compromised account or device.
 
 For each scenario, describe:
 
-- User and admin impact.  
-- How you would detect the issue.  
-- Which design choices (for example fallback methods or separate management VLANs) help reduce risk.
+- The expected behaviour of network devices and user sessions.  
+- How your AAA design helps detect and contain the issue.  
+- What changes or safeguards (for example secondary AAA servers, rate limiting, monitoring) you would put in place.
 
 ### Expected Outcomes
 
 After completing this project you should be able to:
 
-- Present a coherent security hardening plan for a campus network.  
-- Link specific ENCOR security topics to concrete design decisions.  
-- Explain how your design can be implemented in phases without major disruption.
+- Present a unified AAA policy design covering devices, users, and remote access.  
+- Explain how it aligns with broader security and compliance requirements.  
+- Provide guidance to operations and security teams on maintaining and auditing AAA.
 
 ### Reflection
 
 Reflect on:
 
-- Which controls give the best security improvement for the effort required.  
-- How you balanced usability with strict access control.  
-- Which areas would benefit most from integration with a broader security stack (for example endpoint security or SIEM correlation).
+- How centralised AAA changes the way your organisation thinks about identity and access.  
+- Which aspects of AAA design are most critical to document clearly.  
+- How you will evolve your AAA architecture as your network and requirements grow.
+
 

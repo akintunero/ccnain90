@@ -1,103 +1,94 @@
-## Advanced Security Lab 34 – Hardening a Campus Edge and Access Layer
+## Advanced Security Lab 40 – Evaluating TrustSec and MACsec in Your Design
 
 ### Scenario
-Your current campus network was built with basic connectivity in mind, not security. Devices still use simple line passwords, there is little consistency in AAA, and ACLs have been added reactively over time. Wireless security is a mix of pre shared keys and open guest SSIDs, and there is no clear design for network access control.
+Your security architecture already includes segmentation (VLANs, ACLs, and possibly SGTs), but leadership is evaluating technologies like **Cisco TrustSec** and **MACsec** to strengthen security further:
 
-Your CISO has asked you to propose a **security hardening plan** for the campus edge and access layer that:
+- Some high-value links between core, distribution, and datacentre devices are not encrypted.  
+- Policy is still largely tied to IP addresses and VLANs rather than to user or device identity.  
+- There is interest in more dynamic, identity-based policy enforcement, but concerns about complexity.
 
-- Improves device and management plane security.
-- Introduces consistent access control using ACLs and QoS or CoPP where needed.
-- Strengthens wireless security for corporate and guest users.
-- Lays the groundwork for identity based access control using 802.1X and related methods.
+In this lab you will assess where TrustSec and MACsec could realistically fit into your environment and what benefits they would provide relative to their cost and complexity.
 
 ### Project Objectives
 
 By the end of this project you should be able to:
 
-- Describe how device access control will be implemented with AAA.  
-- Propose an ACL strategy that protects infrastructure and enforces policy.  
-- Explain how CoPP or similar techniques can protect the control plane.  
-- Design wireless security profiles appropriate for corporate, BYOD, and guest.  
-- Show where network access control methods such as 802.1X, MAB, and WebAuth will be used.
+- Explain the roles of TrustSec and MACsec in a modern enterprise network.  
+- Identify specific links or segments where MACsec would add meaningful protection.  
+- Propose how identity or tag-based policies (for example SGTs) could complement existing VLAN/ACL models.  
+- Provide a reasoned recommendation on whether and where to adopt these technologies.
 
 ### Technologies and Topics in Scope
 
-This project maps to the ENCOR Security section:
+This project draws from the Security section of the syllabus (5.x):
 
-- Device access control and line protection.  
-- AAA based authentication and authorization.  
-- Infrastructure ACLs and control plane policing.  
-- REST API security at a high level.  
-- Wireless security: EAP, WebAuth, PSK.  
-- Components of network security design:
-  - Threat defence.
-  - Endpoint security.
-  - Next generation firewall placement.
-  - TrustSec and MACsec concepts.
-  - Network access control with 802.1X, MAB, and WebAuth.
+- **5.4 Components of network security design**
+  - 5.4.d TrustSec and MACsec.  
+- **5.2 Infrastructure security features**
+  - How these technologies interact with existing ACLs and segmentation.
 
 ### Project Tasks
 
-1. **Secure device access**
-   - Define how administrators will log into routers, switches, and controllers (for example SSH with AAA).  
-   - Decide which local accounts, if any, will remain for break glass scenarios.  
-   - Plan line and VTY protections, including session limits and timeouts.
-2. **Design AAA and authorization**
-   - Choose an AAA model (for example TACACS+ for device admin, RADIUS for user auth).  
-   - Describe how roles or command authorization will be used for network administrators.  
-   - Decide where AAA servers will reside and how devices will reach them.
-3. **Plan infrastructure ACLs and CoPP**
-   - Identify management and control plane traffic that should be permitted to devices.  
-   - Define ACLs that restrict who can reach device management interfaces.  
-   - Outline how CoPP will protect control protocols from abuse.
-4. **Define wireless security profiles**
-   - Create profiles for:
-     - Corporate devices (for example 802.1X with EAP).  
-     - BYOD (for example WebAuth or PSK with additional controls).  
-     - Guest (captured in a guest VLAN with appropriate internet access only).
-   - Explain which authentication methods each profile will use and why.
-5. **Design network access control**
-   - Decide where 802.1X, MAB, and WebAuth will be applied (for example wired access ports, wireless SSIDs, guest portals).  
-   - Show how the access layer will interact with central policy engines or firewalls.
+1. **Review current segmentation and link protection**
+   - Describe your existing segmentation model (VLANs, ACLs, possibly VRFs or SGTs).  
+   - Identify critical links (for example core-to-datacentre, core-to-branch) where data sensitivity or regulatory requirements may demand encryption.  
+   - Note where identity information (user, device type) is already available via AAA or other sources.
+2. **Evaluate potential MACsec deployment**
+   - Determine which devices and links support MACsec in your environment or planned hardware.  
+   - Decide where link-layer encryption would add value (for example inter-switch trunks carrying sensitive data).  
+   - Consider operational implications: key management, performance impact, and troubleshooting.
+3. **Evaluate potential TrustSec (or SGT-based) deployment**
+   - Describe how security group tags (SGTs) or similar concepts could be used to express policy by role rather than IP.  
+   - Propose simple examples (for example “Finance”, “Guest”, “IoT”) and how policies between them would look.  
+   - Identify which infrastructure components (switches, controllers, firewalls) would participate in tag-based enforcement.
+4. **Assess integration with existing controls**
+   - Explain how TrustSec or MACsec would coexist with your current ACLs, firewalls, and access control methods.  
+   - Identify any overlaps or conflicts, and how you would avoid double-enforcing or missing policies.  
+   - Consider migration strategies from purely IP-based policies to identity/tag-based ones.
+5. **Formulate a recommendation and roadmap**
+   - Summarise where TrustSec and MACsec provide clear benefits and where they might be overkill.  
+   - Propose a small pilot or proof-of-concept scope if adoption seems worthwhile.  
+   - Outline prerequisites (hardware, software, PKI, skill sets) and risks to consider.
 
 ### Design Diagram (Text Form)
 
 At a high level, describe:
 
-- Where AAA servers sit relative to the campus core.  
-- How access switches are connected and where authenticated access will occur.  
-- Where firewalls and other threat defence devices are placed.  
-- How guest and corporate wireless traffic flows through the network.
+- Links where MACsec would be enabled (for example between specific core and distribution switches).  
+- Areas where TrustSec/SGT-based policy would apply (for example campus access and core, datacentre edge).  
+- How tags or identities would flow from access devices through the network to enforcement points.
 
-Use this as the basis for a drawing that highlights security control points, not just connectivity.
+Use this as the basis for a diagram that shows where and how these technologies would be layered onto your existing design.
 
 ### Failure and What-If Analysis
 
 Consider:
 
-- What happens when AAA servers are unreachable.  
-- How users are affected if 802.1X fails or misbehaves.  
-- What happens to management access when infrastructure ACLs are misconfigured.
+- MACsec key negotiation failures on critical inter-switch links.  
+- Misconfigured or conflicting TrustSec policies that block legitimate traffic.  
+- Partial deployment where some devices understand tags and others do not.  
+- A need to quickly disable TrustSec or MACsec during an incident or migration.
 
-For each scenario, describe:
+For each, describe:
 
-- User and admin impact.  
-- How you would detect the issue.  
-- Which design choices (for example fallback methods or separate management VLANs) help reduce risk.
+- Impact on connectivity and security.  
+- How you would detect and diagnose the issue.  
+- What safeguards or rollback mechanisms you would plan in advance.
 
 ### Expected Outcomes
 
 After completing this project you should be able to:
 
-- Present a coherent security hardening plan for a campus network.  
-- Link specific ENCOR security topics to concrete design decisions.  
-- Explain how your design can be implemented in phases without major disruption.
+- Clearly articulate where TrustSec and MACsec fit (or do not fit) in your environment.  
+- Provide leadership with a balanced view of benefits, costs, and complexity.  
+- Suggest concrete next steps if these technologies are to be piloted or adopted more widely.
 
 ### Reflection
 
 Reflect on:
 
-- Which controls give the best security improvement for the effort required.  
-- How you balanced usability with strict access control.  
-- Which areas would benefit most from integration with a broader security stack (for example endpoint security or SIEM correlation).
+- Whether your organisation is ready, from both a skills and process perspective, to adopt these advanced features.  
+- How TrustSec and MACsec complement or overlap with other security initiatives such as zero trust.  
+- What additional learning or lab work you would pursue before recommending production deployment.
+
 

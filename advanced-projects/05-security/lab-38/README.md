@@ -1,4 +1,4 @@
-## Advanced Security Lab 34 – Hardening a Campus Edge and Access Layer
+## Advanced Security Lab 38 – Hardening a Campus Edge and Access Layer
 
 ### Scenario
 Your current campus network was built with basic connectivity in mind, not security. Devices still use simple line passwords, there is little consistency in AAA, and ACLs have been added reactively over time. Wireless security is a mix of pre shared keys and open guest SSIDs, and there is no clear design for network access control.
@@ -9,6 +9,9 @@ Your CISO has asked you to propose a **security hardening plan** for the campus 
 - Introduces consistent access control using ACLs and QoS or CoPP where needed.
 - Strengthens wireless security for corporate and guest users.
 - Lays the groundwork for identity based access control using 802.1X and related methods.
+
+In this scenario you work through where and how next-generation firewalls fit into the existing topology.
+
 
 ### Project Objectives
 
@@ -22,19 +25,21 @@ By the end of this project you should be able to:
 
 ### Technologies and Topics in Scope
 
-This project maps to the ENCOR Security section:
+This project draws from the Security section of the syllabus (5.x):
 
-- Device access control and line protection.  
-- AAA based authentication and authorization.  
-- Infrastructure ACLs and control plane policing.  
-- REST API security at a high level.  
-- Wireless security: EAP, WebAuth, PSK.  
-- Components of network security design:
-  - Threat defence.
-  - Endpoint security.
-  - Next generation firewall placement.
-  - TrustSec and MACsec concepts.
-  - Network access control with 802.1X, MAB, and WebAuth.
+- **5.1 Device access control**
+  - 5.1.a Configuring and verifying lines and local user authentication.
+  - 5.1.b Authentication and authorisation using AAA.
+- **5.2 Infrastructure security features**
+  - 5.2.a ACLs to enforce policy and protect infrastructure.
+  - 5.2.b Control plane policing (CoPP).
+- **5.3 REST API security**
+  - Describing security considerations for REST APIs used to manage the network.
+- **5.4 Components of network security design**
+  - 5.4.a Threat defence.
+  - 5.4.b Endpoint security.
+  - 5.4.c Next-generation firewall placement and role.
+  - 5.4.d TrustSec and MACsec as part of a secure architecture.
 
 ### Project Tasks
 

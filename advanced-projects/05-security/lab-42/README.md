@@ -1,103 +1,104 @@
-## Advanced Security Lab 34 – Hardening a Campus Edge and Access Layer
+## Advanced Security Lab 42 – Monitoring and Tuning Security Policies Over Time
 
 ### Scenario
-Your current campus network was built with basic connectivity in mind, not security. Devices still use simple line passwords, there is little consistency in AAA, and ACLs have been added reactively over time. Wireless security is a mix of pre shared keys and open guest SSIDs, and there is no clear design for network access control.
+You have implemented a range of security controls — AAA, ACLs, CoPP, segmentation, and access control — but security is not a “set and forget” exercise. Over time:
 
-Your CISO has asked you to propose a **security hardening plan** for the campus edge and access layer that:
+- New applications and services appear without corresponding policy updates.  
+- Rules that were once necessary become obsolete or overly permissive.  
+- Alert noise can cause important events to be missed.
 
-- Improves device and management plane security.
-- Introduces consistent access control using ACLs and QoS or CoPP where needed.
-- Strengthens wireless security for corporate and guest users.
-- Lays the groundwork for identity based access control using 802.1X and related methods.
+Your CISO wants confidence that security policies are **actively monitored, reviewed, and tuned** using logs, APIs, and controller views. In this lab you will design how security controls are observed and adjusted over time rather than only during initial deployment.
 
 ### Project Objectives
 
 By the end of this project you should be able to:
 
-- Describe how device access control will be implemented with AAA.  
-- Propose an ACL strategy that protects infrastructure and enforces policy.  
-- Explain how CoPP or similar techniques can protect the control plane.  
-- Design wireless security profiles appropriate for corporate, BYOD, and guest.  
-- Show where network access control methods such as 802.1X, MAB, and WebAuth will be used.
+- Define key security metrics and logs that must be monitored.  
+- Propose regular review and tuning processes for ACLs, access policies, and infrastructure protections.  
+- Explain how controllers, APIs, and SIEM/SOAR platforms can assist in ongoing security operations.  
+- Show how changes to policies are validated and documented.
 
 ### Technologies and Topics in Scope
 
-This project maps to the ENCOR Security section:
+This project draws from the Security section of the syllabus (5.x):
 
-- Device access control and line protection.  
-- AAA based authentication and authorization.  
-- Infrastructure ACLs and control plane policing.  
-- REST API security at a high level.  
-- Wireless security: EAP, WebAuth, PSK.  
-- Components of network security design:
-  - Threat defence.
-  - Endpoint security.
-  - Next generation firewall placement.
-  - TrustSec and MACsec concepts.
-  - Network access control with 802.1X, MAB, and WebAuth.
+- **5.2 Infrastructure security features**
+  - 5.2.a ACLs and related policy enforcement.  
+  - 5.2.b CoPP and other control plane protections.  
+- **5.3 REST API security**
+  - How secure APIs are used to read and adjust configuration or gather telemetry.  
+- **5.4 Components of network security design**
+  - Threat defence, endpoint security, and NGFW integration in an operational context.
 
 ### Project Tasks
 
-1. **Secure device access**
-   - Define how administrators will log into routers, switches, and controllers (for example SSH with AAA).  
-   - Decide which local accounts, if any, will remain for break glass scenarios.  
-   - Plan line and VTY protections, including session limits and timeouts.
-2. **Design AAA and authorization**
-   - Choose an AAA model (for example TACACS+ for device admin, RADIUS for user auth).  
-   - Describe how roles or command authorization will be used for network administrators.  
-   - Decide where AAA servers will reside and how devices will reach them.
-3. **Plan infrastructure ACLs and CoPP**
-   - Identify management and control plane traffic that should be permitted to devices.  
-   - Define ACLs that restrict who can reach device management interfaces.  
-   - Outline how CoPP will protect control protocols from abuse.
-4. **Define wireless security profiles**
-   - Create profiles for:
-     - Corporate devices (for example 802.1X with EAP).  
-     - BYOD (for example WebAuth or PSK with additional controls).  
-     - Guest (captured in a guest VLAN with appropriate internet access only).
-   - Explain which authentication methods each profile will use and why.
-5. **Design network access control**
-   - Decide where 802.1X, MAB, and WebAuth will be applied (for example wired access ports, wireless SSIDs, guest portals).  
-   - Show how the access layer will interact with central policy engines or firewalls.
+1. **Define security monitoring requirements**
+   - List the types of events and metrics you need to watch, such as:
+     - Denied connections from critical ACLs.  
+     - Control plane drops or CoPP hits.  
+     - Authentication failures and unusual AAA patterns.  
+     - NGFW or IDS/IPS alerts tied to network segments.  
+   - Decide where this data will be collected (for example SIEM, NMS, controller).
+2. **Create a policy review and tuning process**
+   - Propose how often ACLs, access policies, and CoPP rules are reviewed (for example quarterly).  
+   - Define criteria for identifying rules that can be tightened or removed.  
+   - Suggest how to involve application owners and security teams in the review.
+3. **Leverage controllers and APIs**
+   - Describe how a controller (for example Cisco Catalyst Center) or automation scripts could:
+     - Check for policy consistency across devices.  
+     - Highlight deviations from a defined baseline.  
+     - Assist in rolling out or rolling back security changes.  
+   - Consider API access controls and logging for any automated changes.
+4. **Design change validation and rollback**
+   - For each type of security control (ACLs, CoPP, access policies), define:
+     - Pre-change checks and approvals.  
+     - Post-change validation steps (for example targeted connectivity tests, log review).  
+     - Clear rollback procedures and conditions.  
+   - Ensure changes can be traced to specific tickets or requests.
+5. **Integrate with incident response**
+   - Explain how security monitoring feeds incident detection (for example alert thresholds, correlation rules).  
+   - Describe how post-incident reviews will identify needed policy changes or tuning.  
+   - Suggest how lessons learned will be captured in documentation and runbooks.
 
 ### Design Diagram (Text Form)
 
 At a high level, describe:
 
-- Where AAA servers sit relative to the campus core.  
-- How access switches are connected and where authenticated access will occur.  
-- Where firewalls and other threat defence devices are placed.  
-- How guest and corporate wireless traffic flows through the network.
+- The flow of logs and metrics from devices, firewalls, and controllers into monitoring platforms.  
+- How analysts or automated systems consume this data and trigger investigations.  
+- Where policy changes originate and how they are propagated to network devices.
 
-Use this as the basis for a drawing that highlights security control points, not just connectivity.
+Use this as the basis for a diagram that shows both data flows and control flows in your security operations.
 
 ### Failure and What-If Analysis
 
 Consider:
 
-- What happens when AAA servers are unreachable.  
-- How users are affected if 802.1X fails or misbehaves.  
-- What happens to management access when infrastructure ACLs are misconfigured.
+- Important security alerts being drowned out by low-value noise.  
+- A critical policy change deployed without sufficient validation.  
+- Monitoring gaps where certain segments or devices are not properly logged.  
+- Loss of visibility due to SIEM or controller outages.
 
-For each scenario, describe:
+For each, describe:
 
-- User and admin impact.  
-- How you would detect the issue.  
-- Which design choices (for example fallback methods or separate management VLANs) help reduce risk.
+- Potential impact on detection and response.  
+- How your monitoring and tuning processes should address or mitigate the issue.  
+- What improvements (process, tooling, or architecture) would further reduce risk.
 
 ### Expected Outcomes
 
 After completing this project you should be able to:
 
-- Present a coherent security hardening plan for a campus network.  
-- Link specific ENCOR security topics to concrete design decisions.  
-- Explain how your design can be implemented in phases without major disruption.
+- Present a realistic plan for continuous monitoring and tuning of network security policies.  
+- Demonstrate how logs, APIs, and controller views are used to maintain security posture over time.  
+- Provide operations and security teams with a framework for managing policy evolution safely.
 
 ### Reflection
 
 Reflect on:
 
-- Which controls give the best security improvement for the effort required.  
-- How you balanced usability with strict access control.  
-- Which areas would benefit most from integration with a broader security stack (for example endpoint security or SIEM correlation).
+- How your organisation currently manages policy drift and whether it is sufficient.  
+- Which aspects of monitoring and tuning would benefit most from automation.  
+- How you will ensure that security operations keep pace with network and business changes.
+
 

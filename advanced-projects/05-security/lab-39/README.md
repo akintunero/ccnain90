@@ -1,103 +1,97 @@
-## Advanced Security Lab 34 – Hardening a Campus Edge and Access Layer
+## Advanced Security Lab 39 – Combining Endpoint and Network Controls for Layered Defence
 
 ### Scenario
-Your current campus network was built with basic connectivity in mind, not security. Devices still use simple line passwords, there is little consistency in AAA, and ACLs have been added reactively over time. Wireless security is a mix of pre shared keys and open guest SSIDs, and there is no clear design for network access control.
+Your network security design has focused heavily on infrastructure controls so far: AAA, ACLs, CoPP, and segmentation at the campus and branch edges. However, recent incidents have highlighted that **endpoint security posture** (for example antivirus, EDR agents, operating system patch levels) is just as important:
 
-Your CISO has asked you to propose a **security hardening plan** for the campus edge and access layer that:
+- Some compromised endpoints had full network access despite weak local controls.  
+- Network logs showed suspicious behaviour, but endpoint telemetry provided the real root cause.  
+- Security teams want a clearer model for how endpoint and network controls should work together.
 
-- Improves device and management plane security.
-- Introduces consistent access control using ACLs and QoS or CoPP where needed.
-- Strengthens wireless security for corporate and guest users.
-- Lays the groundwork for identity based access control using 802.1X and related methods.
+In this lab you will design how endpoint security tools and network security features complement each other to create a layered defence strategy.
 
 ### Project Objectives
 
 By the end of this project you should be able to:
 
-- Describe how device access control will be implemented with AAA.  
-- Propose an ACL strategy that protects infrastructure and enforces policy.  
-- Explain how CoPP or similar techniques can protect the control plane.  
-- Design wireless security profiles appropriate for corporate, BYOD, and guest.  
-- Show where network access control methods such as 802.1X, MAB, and WebAuth will be used.
+- Describe the respective roles of endpoint security and network security controls.  
+- Propose ways to share information between endpoint tools (for example EDR, AV) and network components (for example firewalls, switches, controllers).  
+- Explain how network access and segmentation can respond to endpoint risk signals.  
+- Outline incident response workflows that leverage both endpoint and network telemetry.
 
 ### Technologies and Topics in Scope
 
-This project maps to the ENCOR Security section:
+This project draws from the Security section of the syllabus (5.x):
 
-- Device access control and line protection.  
-- AAA based authentication and authorization.  
-- Infrastructure ACLs and control plane policing.  
-- REST API security at a high level.  
-- Wireless security: EAP, WebAuth, PSK.  
-- Components of network security design:
-  - Threat defence.
-  - Endpoint security.
-  - Next generation firewall placement.
-  - TrustSec and MACsec concepts.
-  - Network access control with 802.1X, MAB, and WebAuth.
+- **5.4 Components of network security design**
+  - 5.4.a Threat defence.  
+  - 5.4.b Endpoint security.  
+  - 5.4.c Next-generation firewall placement.  
+  - 5.4.d TrustSec and MACsec concepts as part of a broader architecture.  
 
 ### Project Tasks
 
-1. **Secure device access**
-   - Define how administrators will log into routers, switches, and controllers (for example SSH with AAA).  
-   - Decide which local accounts, if any, will remain for break glass scenarios.  
-   - Plan line and VTY protections, including session limits and timeouts.
-2. **Design AAA and authorization**
-   - Choose an AAA model (for example TACACS+ for device admin, RADIUS for user auth).  
-   - Describe how roles or command authorization will be used for network administrators.  
-   - Decide where AAA servers will reside and how devices will reach them.
-3. **Plan infrastructure ACLs and CoPP**
-   - Identify management and control plane traffic that should be permitted to devices.  
-   - Define ACLs that restrict who can reach device management interfaces.  
-   - Outline how CoPP will protect control protocols from abuse.
-4. **Define wireless security profiles**
-   - Create profiles for:
-     - Corporate devices (for example 802.1X with EAP).  
-     - BYOD (for example WebAuth or PSK with additional controls).  
-     - Guest (captured in a guest VLAN with appropriate internet access only).
-   - Explain which authentication methods each profile will use and why.
-5. **Design network access control**
-   - Decide where 802.1X, MAB, and WebAuth will be applied (for example wired access ports, wireless SSIDs, guest portals).  
-   - Show how the access layer will interact with central policy engines or firewalls.
+1. **Clarify endpoint vs network responsibilities**
+   - Define what endpoint security tools are responsible for (for example malware detection, host firewalling, posture assessment).  
+   - Define what network security components are responsible for (for example segmentation, traffic inspection, access control).  
+   - Identify areas of overlap and where coordination is most important.
+2. **Design information sharing and integration points**
+   - Describe how endpoint tools can signal risk to the network (for example via APIs, tags, or group membership changes).  
+   - Propose how NGFWs, controllers, or policy engines might consume those signals to adjust access (for example quarantining a host).  
+   - Consider how SIEM or SOAR platforms fit into this picture.
+3. **Align segmentation with endpoint posture**
+   - Propose a simple model where endpoint posture (for example compliant vs non-compliant) influences which VLANs, SGTs, or policies apply.  
+   - Describe how 802.1X, MAB, and WebAuth could be used to place endpoints into appropriate segments based on identity and posture.  
+   - Note any constraints in your current environment that would affect this design.
+4. **Plan joint incident response workflows**
+   - Choose at least two incident types (for example malware on a user laptop, suspicious lateral movement from a server).  
+   - For each, describe:
+     - What endpoint tools detect and how they respond locally.  
+     - What network changes are made (for example blocking IPs/domains, isolating a host, tightening ACLs).  
+     - How evidence from both sides is correlated to understand impact.
+5. **Document governance and ownership**
+   - Define who owns endpoint policies and who owns network policies, and how they coordinate.  
+   - Suggest regular review meetings or processes to keep endpoint and network strategies aligned.  
+   - Note any training or documentation required so teams understand each other’s tools and constraints.
 
 ### Design Diagram (Text Form)
 
 At a high level, describe:
 
-- Where AAA servers sit relative to the campus core.  
-- How access switches are connected and where authenticated access will occur.  
-- Where firewalls and other threat defence devices are placed.  
-- How guest and corporate wireless traffic flows through the network.
+- Where endpoint security tools sit in relation to network components (for example agents on hosts, management consoles, NGFWs, controllers).  
+- How signals about endpoint health or risk flow to network devices or policy engines.  
+- How traffic from different endpoint categories (trusted, at-risk, guest) flows through the network and security stack.
 
-Use this as the basis for a drawing that highlights security control points, not just connectivity.
+Use this as the basis for a diagram that highlights both endpoint and network control layers.
 
 ### Failure and What-If Analysis
 
 Consider:
 
-- What happens when AAA servers are unreachable.  
-- How users are affected if 802.1X fails or misbehaves.  
-- What happens to management access when infrastructure ACLs are misconfigured.
+- Endpoint tools fail to report posture or status correctly.  
+- Network segmentation is misaligned with endpoint risk levels.  
+- A large number of endpoints suddenly report as high-risk (for example widespread malware campaign).  
+- Disagreements between endpoint and network teams about who should act first during an incident.
 
 For each scenario, describe:
 
-- User and admin impact.  
-- How you would detect the issue.  
-- Which design choices (for example fallback methods or separate management VLANs) help reduce risk.
+- Potential impact on security and operations.  
+- How your layered design mitigates or exposes risk.  
+- Which process or technical improvements would reduce the chance or impact of such situations.
 
 ### Expected Outcomes
 
 After completing this project you should be able to:
 
-- Present a coherent security hardening plan for a campus network.  
-- Link specific ENCOR security topics to concrete design decisions.  
-- Explain how your design can be implemented in phases without major disruption.
+- Explain a clear, layered defence model that uses both endpoint and network controls.  
+- Show how endpoint telemetry and network telemetry work together in investigations.  
+- Provide practical guidance for improving coordination between endpoint and network security teams.
 
 ### Reflection
 
 Reflect on:
 
-- Which controls give the best security improvement for the effort required.  
-- How you balanced usability with strict access control.  
-- Which areas would benefit most from integration with a broader security stack (for example endpoint security or SIEM correlation).
+- Where your current organisation relies too heavily on either endpoint or network controls alone.  
+- How you would prioritise integration work between endpoint and network tools.  
+- How this layered approach supports broader security frameworks such as zero trust.
+
 
