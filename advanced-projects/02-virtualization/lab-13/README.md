@@ -1,13 +1,9 @@
-## Advanced Virtualization Lab 09 – Multi-Tenant VRF and Secure Tunneling Design
+## Advanced Virtualization Lab 13 – Multi-Tenant VRF and Secure Tunneling Design
 
 ### Scenario
-Your organisation is consolidating several smaller business units into a single shared network infrastructure. Each unit needs its own logical separation for security and compliance, but the company wants to avoid building completely separate physical networks.
+After successfully rolling out VRFs and GRE/IPsec tunnels, the organisation is planning a longer-term move toward an overlay-based architecture that can stretch segments and simplify multi-site connectivity. Leadership wants to understand whether LISP or VXLAN-style overlays are a good fit and how much of the current design can be reused.
 
-At the same time, there are remote sites and partners that must connect back to specific virtual networks at HQ over the internet. You have been asked to design a data path virtualization strategy that uses:
-
-- VRFs for segmentation.
-- GRE or IPsec tunnels for transport across untrusted networks.
-- A future friendly layout that could support overlay technologies such as LISP or VXLAN.
+This capstone-style virtualization project concentrates on how LISP or VXLAN overlays could evolve your current VRF and tunnel design. You must show which parts of the existing underlay and segmentation model stay the same and where new control-plane components would be introduced.
 
 ### Project Objectives
 
@@ -20,14 +16,18 @@ By the end of this project you should be able to:
 
 ### Technologies and Design Topics in Scope
 
-This project maps to the ENCOR Virtualization section:
+This project draws from the Virtualization section of the syllabus (2.x):
 
-- **Device virtualization**  
-  Hypervisor type 1 and 2, virtual machines, and virtual switches.  
-- **Data path virtualization**  
-  VRF based segmentation, GRE tunnels, and IPsec tunnels.  
-- **Network virtualization concepts**  
-  LISP and VXLAN as future overlay options that sit on top of the transport.
+- **2.1 Device virtualization technologies**
+  - 2.1.a Hypervisor type 1 and type 2.
+  - 2.1.b Virtual machines and their lifecycle.
+  - 2.1.c Virtual switching in virtualised environments.
+- **2.2 Data path virtualization technologies**
+  - 2.2.a VRF-based segmentation for multi-tenant or multi-business-unit designs.
+  - 2.2.b GRE and IPsec tunnelling to carry virtualised paths over untrusted networks.
+- **2.3 Network virtualization concepts**
+  - 2.3.a LISP as an example of separating identity from location.
+  - 2.3.b VXLAN as an overlay to extend Layer 2 segments over a Layer 3 underlay.
 
 ### Project Tasks
 
