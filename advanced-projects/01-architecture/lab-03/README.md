@@ -30,7 +30,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Design Topics in Scope
 
-This project draws from the Architecture section of the syllabus (1.x):
+This project draws from the Architecture section:
 
 - **1.1 Enterprise design principles**
   - 1.1.a High-level enterprise designs: 2-tier, 3-tier, fabric, and cloud-connected campuses.
