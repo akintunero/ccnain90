@@ -16,7 +16,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Design Topics in Scope
 
-This project draws from the Virtualization section of the syllabus (2.x):
+This project draws from the Virtualization section:
 
 - **2.1 Device virtualization technologies**
   - 2.1.a Hypervisor type 1 and type 2.
