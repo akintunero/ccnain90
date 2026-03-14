@@ -1,88 +1,88 @@
-## Advanced Network Assurance Lab 29 – Finding the Slow Application
+## Advanced Network Assurance Lab 33 – Turning Telemetry into Operational Dashboards
 
 ### Scenario
-Users across several departments are complaining that a key internal web application is "slow at random times". Sometimes it works fine, sometimes pages hang for many seconds. No major outages are visible, and basic pings look normal most of the time. Leadership wants a clear answer to:
+Your network now exports a rich set of telemetry: NetFlow records from key interfaces, IPSLA tests for critical paths, syslog streams, and basic SNMP metrics. However:
 
-- Where the problem is (network, server, or application).
-- How confident you are in that answer.
-- What data you used to reach your conclusion.
+- Most of this data is viewed only during incidents.  
+- Different teams use different tools and dashboards, leading to inconsistent views.  
+- Leadership wants high-level health indicators, while engineers need detailed drill-downs.
 
-You have been asked to use the network assurance and monitoring tools available in the environment to investigate and explain the situation.
+In this capstone assurance lab you will design how to **turn raw telemetry into actionable dashboards, alerts, and procedures** that support day-to-day operations and incident response.
 
 ### Project Objectives
 
 By the end of this project you should be able to:
 
-- Use classic tools such as ping, trace route, debugs, SNMP, and syslog in a structured way.  
-- Explain how NetFlow or Flexible NetFlow help you understand traffic patterns.  
-- Show how SPAN or RSPAN captures can confirm or rule out network issues.  
-- Use IPSLA style tests to measure performance over time.  
-- Describe where a controller such as Cisco DNA Center or NETCONF/RESTCONF based automation could simplify ongoing assurance.
+- Define key performance and health indicators (KPIs) for your network.  
+- Design dashboards that present those KPIs at different levels (executive, NOC, engineer).  
+- Specify alert thresholds and escalation paths based on telemetry.  
+- Document procedures that link alerts and dashboards to concrete next actions.
 
 ### Technologies and Topics in Scope
 
-This project maps to the ENCOR Network Assurance section:
+This project draws from the Network Assurance syllabus (4.x) in a synthesised way:
 
-- Diagnosing problems with debugs, conditional debugs, trace route, ping, SNMP, and syslog.  
-- Device monitoring and remote logging with syslog.  
-- NetFlow and Flexible NetFlow.  
-- SPAN, RSPAN, and ERSPAN.  
-- IPSLA.  
-- Cisco DNA Center style configuration and monitoring workflows.  
-- NETCONF and RESTCONF for programmatic monitoring or configuration.
+- **4.1–4.4** – Using diagnostics, NetFlow, SPAN/RSPAN, and IPSLA as data sources.  
+- **4.5–4.6** – Leveraging controllers and APIs to feed and maintain dashboards.
 
 ### Project Tasks
 
-You can work through these tasks conceptually, or by building a small lab that simulates the pattern.
-
-1. **Clarify the problem**
-   - Define which application is slow and from which locations.  
-   - Ask what "slow" means in measurable terms (for example more than 3 seconds to load a page).
-2. **Baseline connectivity**
-   - Use ping and trace route from representative user locations to the application front end.  
-   - Document latency, path, and any asymmetry in routing.
-3. **Collect device health and logs**
-   - Review CPU, memory, and interface statistics from key routers and switches using SNMP or CLI.  
-   - Check syslog for interface flaps, error counters, or protocol issues in the relevant time windows.
-4. **Examine traffic flows with NetFlow**
-   - Look at NetFlow or Flexible NetFlow records for the application.  
-   - Identify changes in volume, top talkers, or unusual flows during slow periods.
-5. **Use SPAN or RSPAN strategically**
-   - Decide where to mirror traffic (for example on a core or aggregation interface).  
-   - Capture a short window of traffic during a slow period and review for retransmissions, resets, or application level issues.
-6. **Configure or interpret IPSLA style tests**
-   - Set up or review existing IPSLA probes that measure HTTP or TCP performance to the application.  
-   - Compare probe results during normal and degraded periods.
-7. **Consider controller and API based workflows**
-   - If you imagine using Cisco DNA Center or similar, describe how its dashboards and path traces could speed up this investigation.  
-   - Note where NETCONF/RESTCONF based scripts could automate checks across devices.
+1. **Define KPIs and audiences**
+   - Identify key metrics that reflect network health, for example:
+     - Interface utilisation and error rates.  
+     - Latency/loss/jitter on critical paths.  
+     - Application response times or transaction success rates (where visible).  
+   - For each KPI, decide which audience cares most (leadership, NOC, engineers) and how often it should be reviewed.
+2. **Design dashboard layouts**
+   - Sketch at least two dashboard concepts:
+     - An executive or leadership view with high-level status and trends.  
+     - An operations/engineering view with more detailed metrics and drill-down capability.  
+   - Describe which widgets, charts, or tables will appear and how they are sourced from telemetry.
+3. **Define alerting and thresholds**
+   - For each KPI or metric, decide:
+     - What constitutes a warning vs a critical condition.  
+     - How long a condition must persist before an alert is raised.  
+   - Map alerts to on-call or escalation procedures, including what initial checks should be performed.
+4. **Link dashboards and alerts to runbooks**
+   - Choose a few representative alerts (for example high utilisation on a WAN link, IPSLA degradation, excessive drops on an interface).  
+   - For each, specify:
+     - Which dashboards or views engineers should consult first.  
+     - Which troubleshooting runbook steps apply.  
+     - How findings should be documented and closed out.
+5. **Plan maintenance and evolution**
+   - Describe how dashboard content and thresholds will be reviewed over time (for example quarterly reviews with operations and leadership).  
+   - Consider how changes in applications or topology will be reflected in your assurance views.  
+   - Identify any automation that could keep dashboards and alerting rules in sync with network changes.
 
 ### Failure and What-If Analysis
 
-Consider and document how your assurance approach would change if:
+Consider these scenarios and describe how your dashboards and procedures help:
 
-- The issue only affected users at a single branch.  
-- The issue only occurred during backup windows in the datacentre.  
-- The application was moved from on premises to a cloud provider.
+- A slow degradation in performance that does not trigger hard thresholds immediately.  
+- A sudden, severe outage affecting a major site or application.  
+- Noisy alerts that cause alert fatigue in the NOC.  
+- Changes in business priorities that shift which KPIs matter most.
 
-For each variation, list:
+For each, explain:
 
-- Which tools you would rely on most.  
-- Which new data sources you would need.
+- How dashboards and alerts should behave.  
+- What adjustments to thresholds or visualisations might be needed.  
+- How you ensure the system remains useful rather than overwhelming.
 
 ### Expected Outcomes
 
-At the end of this lab you should be able to:
+After completing this project you should be able to:
 
-- Present a reasoned hypothesis about the root cause of the slow application.  
-- Support your position with specific evidence from assurance tools.  
-- Explain what additional data you would collect if you had more time or access.
+- Present a set of dashboard and alerting designs that make network health visible at a glance.  
+- Show how those designs are grounded in the telemetry and tooling you have already planned.  
+- Provide clear operational procedures that connect metrics to actions.
 
 ### Reflection
 
 Reflect on:
 
-- Which tools gave you the highest value information for this kind of problem.  
-- How you might build permanent dashboards or alerts so that similar issues are detected earlier in the future.  
-- How automation or controller based workflows could reduce the manual effort involved in your investigation.
+- Which KPIs are most powerful in predicting or detecting issues early.  
+- How you will measure the success of your dashboards and alerts (for example reduced MTTR, fewer surprise outages).  
+- How you will keep your assurance views aligned with changing network and business realities.
+
 

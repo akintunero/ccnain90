@@ -1,88 +1,86 @@
-## Advanced Network Assurance Lab 29 – Finding the Slow Application
+## Advanced Network Assurance Lab 31 – Designing Always-On Visibility with NetFlow, SPAN, and IPSLA
 
 ### Scenario
-Users across several departments are complaining that a key internal web application is "slow at random times". Sometimes it works fine, sometimes pages hang for many seconds. No major outages are visible, and basic pings look normal most of the time. Leadership wants a clear answer to:
+Your organisation has historically relied on **ad-hoc troubleshooting** when network problems arise: engineers enable debug, SPAN, or packet captures only after users complain. This means that:
 
-- Where the problem is (network, server, or application).
-- How confident you are in that answer.
-- What data you used to reach your conclusion.
+- Important evidence is often missing by the time you start investigating.  
+- Performance trends are hard to see without historical baselines.  
+- It is difficult to know whether a “fix” really solved the problem or if the issue simply disappeared.
 
-You have been asked to use the network assurance and monitoring tools available in the environment to investigate and explain the situation.
+Leadership wants a more proactive approach where the network continuously produces useful telemetry. In this lab you will design a set of **always-on visibility policies** using Flexible NetFlow, SPAN/RSPAN, and IPSLA so that you are better prepared for future incidents.
 
 ### Project Objectives
 
 By the end of this project you should be able to:
 
-- Use classic tools such as ping, trace route, debugs, SNMP, and syslog in a structured way.  
-- Explain how NetFlow or Flexible NetFlow help you understand traffic patterns.  
-- Show how SPAN or RSPAN captures can confirm or rule out network issues.  
-- Use IPSLA style tests to measure performance over time.  
-- Describe where a controller such as Cisco DNA Center or NETCONF/RESTCONF based automation could simplify ongoing assurance.
+- Identify which network segments and applications should be covered by baseline NetFlow export.  
+- Decide where to configure SPAN/RSPAN for on-demand or limited continuous capture.  
+- Design IPSLA tests that measure critical paths and applications over time.  
+- Show how these telemetry sources combine into a practical visibility strategy.
 
 ### Technologies and Topics in Scope
 
-This project maps to the ENCOR Network Assurance section:
+This project draws from the Network Assurance section of the syllabus (4.x):
 
-- Diagnosing problems with debugs, conditional debugs, trace route, ping, SNMP, and syslog.  
-- Device monitoring and remote logging with syslog.  
-- NetFlow and Flexible NetFlow.  
-- SPAN, RSPAN, and ERSPAN.  
-- IPSLA.  
-- Cisco DNA Center style configuration and monitoring workflows.  
-- NETCONF and RESTCONF for programmatic monitoring or configuration.
+- **4.2 Flexible NetFlow** – Designing export points and record types for key services.  
+- **4.3 Traffic mirroring** – SPAN, RSPAN, and ERSPAN usage for packet analysis.  
+- **4.4 IPSLA** – Synthetic measurements to track performance trends.  
+- **4.1, 4.5, 4.6** – How classic tools, controllers, and APIs consume this telemetry.
 
 ### Project Tasks
 
-You can work through these tasks conceptually, or by building a small lab that simulates the pattern.
-
-1. **Clarify the problem**
-   - Define which application is slow and from which locations.  
-   - Ask what "slow" means in measurable terms (for example more than 3 seconds to load a page).
-2. **Baseline connectivity**
-   - Use ping and trace route from representative user locations to the application front end.  
-   - Document latency, path, and any asymmetry in routing.
-3. **Collect device health and logs**
-   - Review CPU, memory, and interface statistics from key routers and switches using SNMP or CLI.  
-   - Check syslog for interface flaps, error counters, or protocol issues in the relevant time windows.
-4. **Examine traffic flows with NetFlow**
-   - Look at NetFlow or Flexible NetFlow records for the application.  
-   - Identify changes in volume, top talkers, or unusual flows during slow periods.
-5. **Use SPAN or RSPAN strategically**
-   - Decide where to mirror traffic (for example on a core or aggregation interface).  
-   - Capture a short window of traffic during a slow period and review for retransmissions, resets, or application level issues.
-6. **Configure or interpret IPSLA style tests**
-   - Set up or review existing IPSLA probes that measure HTTP or TCP performance to the application.  
-   - Compare probe results during normal and degraded periods.
-7. **Consider controller and API based workflows**
-   - If you imagine using Cisco DNA Center or similar, describe how its dashboards and path traces could speed up this investigation.  
-   - Note where NETCONF/RESTCONF based scripts could automate checks across devices.
+1. **Define visibility requirements**
+   - List the top applications, services, or paths where you want ongoing visibility (for example internet edge, datacentre front-ends, critical WAN links).  
+   - For each, decide what you need to know:
+     - Traffic volume and patterns.  
+     - Latency, loss, or jitter.  
+     - Occurrence of specific events (for example retransmissions or resets).
+2. **Plan Flexible NetFlow deployment**
+   - Choose which interfaces or devices will export NetFlow records and to which collectors.  
+   - Define record types (fields) that are most useful for performance and security analysis.  
+   - Consider sampling vs full export and how much data your collectors can handle.
+3. **Design SPAN/RSPAN strategy**
+   - Identify a small number of strategic locations (for example core aggregation points) where SPAN or RSPAN can be configured quickly when deep packet analysis is needed.  
+   - Decide whether any low-rate, continuous SPAN sessions are justified, or if all SPAN will be on-demand.  
+   - Document how to avoid oversubscribing SPAN destinations or impacting production traffic.
+4. **Define IPSLA test profiles**
+   - Select critical paths (for example branch-to-datacentre, campus-to-internet edge) and configure or conceptualise IPSLA tests for them.  
+   - Decide test frequency and thresholds for alerting.  
+   - Plan how IPSLA results will be visualised (for example NMS graphs, controller dashboards).
+5. **Integrate telemetry into operations**
+   - Describe how NetFlow, SPAN, and IPSLA data will feed into your existing monitoring stack (NMS, SIEM, or controller).  
+   - Define runbook entries: when an incident occurs, which telemetry sources should be checked first and how.  
+   - Suggest periodic reviews of telemetry configuration to ensure it still matches business priorities.
 
 ### Failure and What-If Analysis
 
-Consider and document how your assurance approach would change if:
+Consider these scenarios and describe how your telemetry design helps:
 
-- The issue only affected users at a single branch.  
-- The issue only occurred during backup windows in the datacentre.  
-- The application was moved from on premises to a cloud provider.
+- Latency slowly increases on a key WAN link over several weeks.  
+- A sudden spike in traffic saturates an internet edge link during business hours.  
+- Users intermittently fail to connect to a SaaS application but internal metrics look normal.  
+- A security team asks for historical information on traffic to a suspicious destination.
 
-For each variation, list:
+For each, explain:
 
-- Which tools you would rely on most.  
-- Which new data sources you would need.
+- Which NetFlow, SPAN, or IPSLA data you would consult.  
+- How having always-on visibility changes the speed and quality of your response.  
+- Any gaps that still remain and how you might close them.
 
 ### Expected Outcomes
 
-At the end of this lab you should be able to:
+After completing this project you should be able to:
 
-- Present a reasoned hypothesis about the root cause of the slow application.  
-- Support your position with specific evidence from assurance tools.  
-- Explain what additional data you would collect if you had more time or access.
+- Present a concrete plan for continuous network visibility using standard assurance tools.  
+- Justify where and how telemetry is collected in terms of business value and operational cost.  
+- Provide guidance on maintaining and evolving this visibility strategy over time.
 
 ### Reflection
 
 Reflect on:
 
-- Which tools gave you the highest value information for this kind of problem.  
-- How you might build permanent dashboards or alerts so that similar issues are detected earlier in the future.  
-- How automation or controller based workflows could reduce the manual effort involved in your investigation.
+- How your proposed visibility design would have helped in past incidents you have experienced.  
+- Which parts of the plan rely most on tooling versus process and discipline.  
+- How you will measure whether your telemetry strategy is actually improving troubleshooting outcomes.
+
 

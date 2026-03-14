@@ -1,88 +1,90 @@
-## Advanced Network Assurance Lab 29 – Finding the Slow Application
+## Advanced Network Assurance Lab 30 – Building a Reusable Network Troubleshooting Runbook
 
 ### Scenario
-Users across several departments are complaining that a key internal web application is "slow at random times". Sometimes it works fine, sometimes pages hang for many seconds. No major outages are visible, and basic pings look normal most of the time. Leadership wants a clear answer to:
+Your team has handled several recent incidents: a slow internal application, intermittent packet loss on a WAN link, and users at a branch unable to reach a SaaS service. Each time, different engineers followed slightly different troubleshooting approaches, and it was hard to compare notes or build on previous work.
 
-- Where the problem is (network, server, or application).
-- How confident you are in that answer.
-- What data you used to reach your conclusion.
-
-You have been asked to use the network assurance and monitoring tools available in the environment to investigate and explain the situation.
+Leadership has asked you to **standardise how network investigations are performed and documented**. In this lab you will design a reusable troubleshooting runbook that can be applied to a wide range of network issues, not just a single slow application.
 
 ### Project Objectives
 
 By the end of this project you should be able to:
 
-- Use classic tools such as ping, trace route, debugs, SNMP, and syslog in a structured way.  
-- Explain how NetFlow or Flexible NetFlow help you understand traffic patterns.  
-- Show how SPAN or RSPAN captures can confirm or rule out network issues.  
-- Use IPSLA style tests to measure performance over time.  
-- Describe where a controller such as Cisco DNA Center or NETCONF/RESTCONF based automation could simplify ongoing assurance.
+- Define a structured troubleshooting workflow for network incidents.  
+- Map specific tools (ping, traceroute, debugs, SNMP, syslog, NetFlow, SPAN/RSPAN, IPSLA) to each step of that workflow.  
+- Produce templates for capturing investigation data and conclusions.  
+- Explain how controllers and APIs can enhance or automate parts of the process.
 
 ### Technologies and Topics in Scope
 
-This project maps to the ENCOR Network Assurance section:
+This project draws from the Network Assurance section of the syllabus (4.x):
 
-- Diagnosing problems with debugs, conditional debugs, trace route, ping, SNMP, and syslog.  
-- Device monitoring and remote logging with syslog.  
-- NetFlow and Flexible NetFlow.  
-- SPAN, RSPAN, and ERSPAN.  
-- IPSLA.  
-- Cisco DNA Center style configuration and monitoring workflows.  
-- NETCONF and RESTCONF for programmatic monitoring or configuration.
+- **4.1 Problem diagnosis tools** – Ping, traceroute, debugs, SNMP, and syslog in a repeatable sequence.  
+- **4.2 Flexible NetFlow** – As a standard way to observe traffic patterns.  
+- **4.3 Traffic mirroring** – SPAN, RSPAN, and ERSPAN for deeper packet-level analysis.  
+- **4.4 IPSLA** – For synthetic testing and baseline measurements.  
+- **4.5 Cisco Catalyst Center** – Example of a controller that can orchestrate and visualise checks.  
+- **4.6 NETCONF/RESTCONF** – For programmatic data collection and verification.
 
 ### Project Tasks
 
-You can work through these tasks conceptually, or by building a small lab that simulates the pattern.
-
-1. **Clarify the problem**
-   - Define which application is slow and from which locations.  
-   - Ask what "slow" means in measurable terms (for example more than 3 seconds to load a page).
-2. **Baseline connectivity**
-   - Use ping and trace route from representative user locations to the application front end.  
-   - Document latency, path, and any asymmetry in routing.
-3. **Collect device health and logs**
-   - Review CPU, memory, and interface statistics from key routers and switches using SNMP or CLI.  
-   - Check syslog for interface flaps, error counters, or protocol issues in the relevant time windows.
-4. **Examine traffic flows with NetFlow**
-   - Look at NetFlow or Flexible NetFlow records for the application.  
-   - Identify changes in volume, top talkers, or unusual flows during slow periods.
-5. **Use SPAN or RSPAN strategically**
-   - Decide where to mirror traffic (for example on a core or aggregation interface).  
-   - Capture a short window of traffic during a slow period and review for retransmissions, resets, or application level issues.
-6. **Configure or interpret IPSLA style tests**
-   - Set up or review existing IPSLA probes that measure HTTP or TCP performance to the application.  
-   - Compare probe results during normal and degraded periods.
-7. **Consider controller and API based workflows**
-   - If you imagine using Cisco DNA Center or similar, describe how its dashboards and path traces could speed up this investigation.  
-   - Note where NETCONF/RESTCONF based scripts could automate checks across devices.
+1. **Design the troubleshooting flow**
+   - Define the main phases of an investigation, for example:
+     - Problem intake and scoping.  
+     - Basic connectivity and path checks.  
+     - Device health and interface validation.  
+     - Traffic and flow analysis.  
+     - Deep-dive packet analysis (when needed).  
+   - For each phase, specify the questions to answer and the typical time budget.
+2. **Map tools to each phase**
+   - For each phase in your flow, list:
+     - Which tools are mandatory (for example ping/traceroute for connectivity, SNMP/syslog for health).  
+     - Which tools are optional or advanced (for example IPSLA, ERSPAN, NETCONF queries).  
+   - Provide example command sets or API calls that would be used in a typical case.
+3. **Create investigation templates**
+   - Design a simple form or document structure that engineers must complete during an incident, including:
+     - Problem statement and scope.  
+     - Steps taken and data collected (with timestamps).  
+     - Hypotheses considered and accepted/rejected.  
+     - Final conclusion and recommended next actions.  
+   - Ensure the template is concise enough to be practical but detailed enough to be useful later.
+4. **Integrate controller and automation concepts**
+   - Identify which steps could be automated or accelerated with a controller like Cisco Catalyst Center.  
+   - Describe how NETCONF/RESTCONF or scripts could collect standard data across many devices at once.  
+   - Note any prerequisites (inventory accuracy, device access, role-based permissions).
+5. **Test the runbook against sample scenarios**
+   - Apply your runbook to at least two previous or hypothetical incidents (for example slow app, WAN packet loss, branch outage).  
+   - Record how well the flow fits each case and where adjustments are needed.  
+   - Refine the runbook based on what you learn.
 
 ### Failure and What-If Analysis
 
-Consider and document how your assurance approach would change if:
+Consider and document how your runbook would handle:
 
-- The issue only affected users at a single branch.  
-- The issue only occurred during backup windows in the datacentre.  
-- The application was moved from on premises to a cloud provider.
+- A widespread but brief latency spike that resolves before deep analysis is possible.  
+- An issue that only affects a single user or device.  
+- A complex problem involving multiple domains (for example wireless, WAN, and security).  
+- A case where initial evidence points away from the network but stakeholders insist “it must be the network”.
 
-For each variation, list:
+For each, explain:
 
-- Which tools you would rely on most.  
-- Which new data sources you would need.
+- How your flow ensures a thorough but efficient investigation.  
+- How you capture enough evidence to support your conclusions.  
+- How you communicate findings clearly to non-network teams.
 
 ### Expected Outcomes
 
 At the end of this lab you should be able to:
 
-- Present a reasoned hypothesis about the root cause of the slow application.  
-- Support your position with specific evidence from assurance tools.  
-- Explain what additional data you would collect if you had more time or access.
+- Present a practical, step-by-step network troubleshooting runbook that your team can adopt.  
+- Demonstrate how specific assurance tools plug into that runbook.  
+- Improve consistency and quality of future network investigations.
 
 ### Reflection
 
 Reflect on:
 
-- Which tools gave you the highest value information for this kind of problem.  
-- How you might build permanent dashboards or alerts so that similar issues are detected earlier in the future.  
-- How automation or controller based workflows could reduce the manual effort involved in your investigation.
+- Which parts of your runbook are most critical to follow strictly, and which can be flexible.  
+- How you will train other engineers to use it effectively.  
+- How you will evolve the runbook as new tools and network designs are introduced.
+
 
