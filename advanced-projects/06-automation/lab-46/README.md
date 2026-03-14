@@ -1,83 +1,107 @@
-## Advanced Automation Lab 44 – First Steps in Network Automation and APIs
+## Advanced Automation Lab 46 – Using Controller and Device APIs for Change Windows
 
 ### Scenario
-Your network team has been asked to "start using automation" to reduce repetitive work and improve consistency. Today, most changes are made by hand on the CLI. There is no clear inventory of which devices exist, and simple tasks such as pushing a new NTP server or updating an ACL require a lot of copy and paste.
+Your organisation has strict change windows for network modifications. Today, engineers build per-device CLI change plans and copy and paste commands during an evening or weekend window. This works, but it is slow and error-prone. A missed command on one switch or router can cause inconsistent behaviour that is only noticed days later.
 
-Management is not asking for a full controller deployment on day one. Instead, they want you to propose and demonstrate a small but meaningful automation initiative that:
+Management is open to using **controller and device APIs** to make change windows safer and more predictable, but they want a clear design before investing in tooling. In this lab you will design an approach where:
 
-- Uses basic Python or a similar scripting language where appropriate.
-- Works with structured data such as JSON or YAML.
-- Interacts with at least one API (for example Cisco DNA Center, vManage, or device level RESTCONF/NETCONF).
+- Planned changes are described in structured data (for example JSON).  
+- A script or tool uses controller or device APIs to preview, apply, and verify changes.  
+- The process fits into existing change management and rollback procedures.
+
+You are not writing a full framework; you are designing how APIs will be used in a controlled, auditable way during scheduled changes.
 
 ### Project Objectives
 
 By the end of this project you should be able to:
 
-- Read and reason about simple Python scripts that perform network tasks.  
-- Understand how JSON and YANG style data models structure configuration and state.  
-- Explain how APIs from Cisco DNA Center or vManage can be used to query and change the network.  
-- Interpret REST API responses, including codes and payload data.  
-- Describe where EEM applets or orchestration tools fit into your automation roadmap.
+- Describe when to use a controller API versus direct device APIs (RESTCONF/NETCONF) during change windows.  
+- Design a JSON-based representation of intended changes that a script can interpret.  
+- Explain how to use API calls to perform pre-checks, apply changes, and run post-checks.  
+- Interpret REST API responses in the context of success, partial success, or failure.  
+- Show how this workflow integrates with existing approval, logging, and rollback processes.
 
 ### Technologies and Topics in Scope
 
-This project ties into the ENCOR Automation section:
+This project emphasises the Automation section (6.x):
 
-- Basic Python components and scripts.  
-- JSON encoding and structured data.  
-- High level principles of YANG and data modelling.  
-- APIs for Cisco DNA Center and vManage.  
-- REST API codes and payloads using DNA Center or RESTCONF.  
-- EEM applets for configuration, troubleshooting, or data collection.  
-- Agent based and agentless orchestration tools such as Chef, Puppet, Ansible, and SaltStack.
+- **6.1 Python components and scripts** – for orchestrating pre-checks, changes, and post-checks.  
+- **6.2 JSON encoded data** – for describing change intent in a machine-readable way.  
+- **6.3 Data modelling with YANG** – for understanding how modelled configuration items are targeted.  
+- **6.4 APIs for Cisco Catalyst Center and SD-WAN Manager** – as central control points for many devices.  
+- **6.5 REST API responses** – including handling error codes and parsing payloads.  
+- **6.6 EEM applets and 6.7 orchestration tools** – as complementary mechanisms where appropriate.
 
 ### Project Tasks
 
-You do not need to write production quality code. The goal is to understand and explain an automation approach that could realistically be adopted by your team.
-
-1. **Choose a simple but valuable use case**
+1. **Choose a repeatable change scenario**  
    - Examples:
-     - Collect basic inventory and interface status from all devices.  
-     - Roll out a new NTP or syslog configuration to a group of switches.  
-     - Check that certain ACLs or QoS policies are present and correctly configured.
-2. **Define your data model**
-   - Decide what information your script or tool needs (for example device IPs, roles, credentials, target NTP servers).  
-   - Represent that data in JSON or YAML. Make sure the structure is clear and easy to extend.
-3. **Select an interaction method**
-   - Option A: Use device level APIs (RESTCONF or NETCONF) to pull or push configuration snippets.  
-   - Option B: Use a controller API such as Cisco DNA Center or vManage to perform actions on your behalf.  
-   - Option C: Use SSH based libraries (for example in Python) as a first step while you explore APIs.
-4. **Sketch or read a Python script**
-   - Either write a small script yourself or find a simple example that:
-     - Reads your JSON or YAML inventory.  
-     - Connects to devices or a controller.  
-     - Performs your chosen task in a loop.  
-   - Make sure you understand each major part of the script: input, connection, action, and output.
-5. **Consider EEM and orchestration tools**
-   - Describe how an EEM applet could automate a very local task on a device (for example collecting logs when an interface flaps).  
-   - Compare this to what an orchestration tool like Ansible would do at scale.
+     - Updating NTP and syslog settings across a set of access switches.  
+     - Adding a new VLAN and associated SVI on distribution switches.  
+     - Adjusting QoS policy on WAN edge devices for a new application.  
+   - Write a short description of the change, including which devices and which configuration elements are affected.
+2. **Define the intent data model**  
+   - Design a JSON structure that represents:
+     - Target devices or device groups.  
+     - The specific configuration changes to make (at a high level).  
+     - Any parameters, such as VLAN IDs, IP addresses, or policy names.  
+   - Ensure the model can be versioned and stored alongside change tickets.
+3. **Plan API-based pre-checks and post-checks**  
+   - For each configuration element you plan to change, describe:
+     - Which API calls or show-equivalent data you will collect before the change.  
+     - Which data you will collect after the change to confirm success.  
+   - Include how you will detect partial success (for example some devices updated, others failed).
+4. **Outline the change execution script**  
+   - Sketch the main steps of a Python script or similar tool:
+     - Read the JSON intent and validate it.  
+     - Fetch current state via controller or device APIs.  
+     - Apply changes in a controlled order (for example core, then distribution, then access).  
+     - Run post-checks and summarise results.  
+   - Explain how the script logs actions and results for audit purposes.
+5. **Integrate with change management and rollback**  
+   - Describe how your approach:
+     - Fits into existing approval workflows (for example attaching the JSON and script plan to a ticket).  
+     - Supports rollback strategies (for example capturing pre-change config snippets or intent).  
+     - Provides clear reporting for the change review meeting.
 
-### Validation and What-If Analysis
+### Design Diagram (Text Form)
 
-Think through:
+Describe a conceptual diagram of this API-driven change window:
 
-- How you would test your automation safely (for example read only operations first, then small pilot groups).  
-- How you would roll back changes if something went wrong.  
-- How you would handle authentication and secrets securely as your scripts or tools grow.
+- A "Change Intent" block that stores JSON definitions tied to tickets.  
+- A "Change Orchestrator" block (your script or tool) that reads intent and talks to APIs.  
+- "Controller" and "Devices" blocks that expose RESTCONF/NETCONF or controller APIs.  
+- A "Change Management" block that represents approvals, logs, and reports.
+
+Show the sequence from approved intent to orchestrated API calls, to verification, to reporting.
+
+### Failure and What-If Analysis
+
+Consider and document:
+
+- What happens if an API call fails halfway through a multi-device change. How do you detect which devices were updated and which were not.  
+- How you respond if the post-checks show degraded performance or incorrect configuration.  
+- What you do if the controller itself is unavailable during the change window.
+
+For each case, describe:
+
+- The immediate action you would take.  
+- How your design (for example logging, pre-checks, and rollback plans) helps limit impact.  
+- What you would improve in the next iteration of the API-driven change process.
 
 ### Expected Outcomes
 
 After completing this project you should be able to:
 
-- Explain, in plain language, a small automation project that would help your team.  
-- Walk through a basic Python and JSON based workflow for that project.  
-- Describe how you would evolve this into a more robust solution using controllers, APIs, or orchestration tools.
+- Present a realistic plan for using controller and device APIs during scheduled change windows.  
+- Walk through the flow of intent, API calls, and verification for a specific change scenario.  
+- Explain how this approach reduces manual errors and improves auditability.
 
 ### Reflection
 
 Reflect on:
 
-- Which tasks in your current environment are best suited to early automation.  
-- Which skills you and your team would need to develop to be comfortable with scripting and APIs.  
-- How you can build confidence and trust in automated changes by starting small and validating carefully.
+- Which existing change types in your environment would benefit most from this structured, API-driven approach.  
+- What skills your team would need to gain confidence in running changes this way.  
+- How you could pilot this method on a low-risk change before expanding to critical services.
 

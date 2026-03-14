@@ -1,83 +1,102 @@
-## Advanced Automation Lab 44 – First Steps in Network Automation and APIs
+## Advanced Automation Lab 49 – Selecting and Introducing a Network Orchestration Platform
 
 ### Scenario
-Your network team has been asked to "start using automation" to reduce repetitive work and improve consistency. Today, most changes are made by hand on the CLI. There is no clear inventory of which devices exist, and simple tasks such as pushing a new NTP server or updating an ACL require a lot of copy and paste.
+Your organisation has experimented with individual scripts and small automation tools. These have helped in specific areas, but they are hard to share, maintain, and govern. Different engineers keep their own copies, and it is not always clear which script is current or tested.
 
-Management is not asking for a full controller deployment on day one. Instead, they want you to propose and demonstrate a small but meaningful automation initiative that:
+Senior leadership is considering adopting a **network orchestration platform** (for example Ansible, or another agentless or agent-based tool) as a standard way to automate changes and checks. Before committing, they want a structured comparison and an initial onboarding plan tailored to your environment.
 
-- Uses basic Python or a similar scripting language where appropriate.
-- Works with structured data such as JSON or YAML.
-- Interacts with at least one API (for example Cisco DNA Center, vManage, or device level RESTCONF/NETCONF).
+In this lab you will not write playbooks; instead, you will **evaluate orchestration options** and design how one of them would be introduced safely alongside existing processes.
 
 ### Project Objectives
 
 By the end of this project you should be able to:
 
-- Read and reason about simple Python scripts that perform network tasks.  
-- Understand how JSON and YANG style data models structure configuration and state.  
-- Explain how APIs from Cisco DNA Center or vManage can be used to query and change the network.  
-- Interpret REST API responses, including codes and payload data.  
-- Describe where EEM applets or orchestration tools fit into your automation roadmap.
+- Compare agent-based and agentless orchestration approaches for network automation.  
+- Define selection criteria that matter for your organisation (skills, security, scale, integrations).  
+- Propose a reference architecture for an orchestration platform in your network.  
+- Design a small pilot project and onboarding plan that reduces risk and builds confidence.
 
 ### Technologies and Topics in Scope
 
-This project ties into the ENCOR Automation section:
+This project emphasises part of the Automation syllabus (6.7) while tying in earlier topics:
 
-- Basic Python components and scripts.  
-- JSON encoding and structured data.  
-- High level principles of YANG and data modelling.  
-- APIs for Cisco DNA Center and vManage.  
-- REST API codes and payloads using DNA Center or RESTCONF.  
-- EEM applets for configuration, troubleshooting, or data collection.  
-- Agent based and agentless orchestration tools such as Chef, Puppet, Ansible, and SaltStack.
+- **6.7 Orchestration tools** – comparing and positioning tools such as Ansible, Chef, Puppet, and SaltStack.  
+- **6.1 Python components and scripts** – as building blocks that may be reused within orchestration workflows.  
+- **6.2 JSON encoded data and 6.3 YANG models** – for describing inventory, intent, and configuration.  
+- **6.4 and 6.5 APIs and REST responses** – as key interfaces that orchestration tools will call.  
+- **6.6 EEM applets** – as complementary local automation that remains device-centric.
 
 ### Project Tasks
 
-You do not need to write production quality code. The goal is to understand and explain an automation approach that could realistically be adopted by your team.
+1. **Define selection criteria for orchestration tools**  
+   - List factors that matter in your environment, such as:
+     - Support for network devices and vendors you use.  
+     - Learning curve for your current team.  
+     - Security model (keys, credentials, role-based access).  
+     - Integration with existing CI/CD, ticketing, or inventory systems.  
+   - Prioritise these criteria and note any non-negotiable requirements.
+2. **Compare at least two orchestration options**  
+   - Choose two or three candidate tools (for example Ansible and one agent-based alternative).  
+   - For each, describe:
+     - How it connects to network devices (SSH, API, agents).  
+     - How state and inventory are managed.  
+     - Strengths and weaknesses for your use cases (compliance, change windows, self-service).
+3. **Design a reference architecture**  
+   - Sketch how a chosen orchestration tool would fit into your network:
+     - Where the control node(s) or servers live.  
+     - How they reach devices, controllers, and inventory sources.  
+     - How authentication and authorisation are handled.  
+   - Include logging, backup, and disaster recovery considerations for the orchestration platform itself.
+4. **Plan a pilot project**  
+   - Select a narrow but valuable use case from earlier labs (for example configuration compliance checks or a standard change template).  
+   - Define:
+     - Scope (which devices and locations).  
+     - Success criteria (for example manual effort saved, errors reduced).  
+     - Rollback and fallback procedures if the orchestration tool is unavailable.
+5. **Create an onboarding and governance outline**  
+   - Describe:
+     - How engineers will be trained and granted access to the orchestration platform.  
+     - How playbooks or equivalent workflows are reviewed, tested, and approved before production use.  
+     - How you will track versions and ownership of automation content over time.
 
-1. **Choose a simple but valuable use case**
-   - Examples:
-     - Collect basic inventory and interface status from all devices.  
-     - Roll out a new NTP or syslog configuration to a group of switches.  
-     - Check that certain ACLs or QoS policies are present and correctly configured.
-2. **Define your data model**
-   - Decide what information your script or tool needs (for example device IPs, roles, credentials, target NTP servers).  
-   - Represent that data in JSON or YAML. Make sure the structure is clear and easy to extend.
-3. **Select an interaction method**
-   - Option A: Use device level APIs (RESTCONF or NETCONF) to pull or push configuration snippets.  
-   - Option B: Use a controller API such as Cisco DNA Center or vManage to perform actions on your behalf.  
-   - Option C: Use SSH based libraries (for example in Python) as a first step while you explore APIs.
-4. **Sketch or read a Python script**
-   - Either write a small script yourself or find a simple example that:
-     - Reads your JSON or YAML inventory.  
-     - Connects to devices or a controller.  
-     - Performs your chosen task in a loop.  
-   - Make sure you understand each major part of the script: input, connection, action, and output.
-5. **Consider EEM and orchestration tools**
-   - Describe how an EEM applet could automate a very local task on a device (for example collecting logs when an interface flaps).  
-   - Compare this to what an orchestration tool like Ansible would do at scale.
+### Design Diagram (Text Form)
 
-### Validation and What-If Analysis
+Describe a conceptual diagram of your orchestration platform:
 
-Think through:
+- An \"Orchestration Controller\" block at the centre.  
+- \"Inventory and Source of Truth\" blocks feeding device lists and intent.  
+- \"Network Devices and Controllers\" blocks that receive changes and checks.  
+- \"Users and Processes\" blocks representing engineers, change management, and CI/CD.
 
-- How you would test your automation safely (for example read only operations first, then small pilot groups).  
-- How you would roll back changes if something went wrong.  
-- How you would handle authentication and secrets securely as your scripts or tools grow.
+Show the flow from intent and requests, through orchestration logic, to executed changes and feedback.
+
+### Failure and What-If Analysis
+
+Consider:
+
+- The orchestration controller is unavailable during a planned change window. How do you proceed.  
+- A playbook has an error that affects more devices than intended. How will you detect, stop, and roll back.  
+- A security audit questions how credentials and access rights are managed within the orchestration platform.
+
+For each case, describe:
+
+- The potential impact and who is affected.  
+- Controls and practices you would put in place (for example staged rollouts, approvals, credential vaults).  
+- How those controls align with your earlier automation designs.
 
 ### Expected Outcomes
 
 After completing this project you should be able to:
 
-- Explain, in plain language, a small automation project that would help your team.  
-- Walk through a basic Python and JSON based workflow for that project.  
-- Describe how you would evolve this into a more robust solution using controllers, APIs, or orchestration tools.
+- Present a reasoned recommendation for a network orchestration platform.  
+- Explain how it will integrate with your existing automation tools and processes.  
+- Outline a practical, low-risk path from evaluation to initial production use.
 
 ### Reflection
 
 Reflect on:
 
-- Which tasks in your current environment are best suited to early automation.  
-- Which skills you and your team would need to develop to be comfortable with scripting and APIs.  
-- How you can build confidence and trust in automated changes by starting small and validating carefully.
+- Which orchestration features are genuinely valuable for your environment versus \"nice to have\".  
+- Where you might start too big and how to keep the initial scope focused.  
+- How you will keep orchestration content maintainable as the network and team evolve.
 

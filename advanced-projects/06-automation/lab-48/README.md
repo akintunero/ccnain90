@@ -1,83 +1,115 @@
-## Advanced Automation Lab 44 – First Steps in Network Automation and APIs
+## Advanced Automation Lab 48 – Automation Capstone: From Scripts to an Operations Runbook
 
 ### Scenario
-Your network team has been asked to "start using automation" to reduce repetitive work and improve consistency. Today, most changes are made by hand on the CLI. There is no clear inventory of which devices exist, and simple tasks such as pushing a new NTP server or updating an ACL require a lot of copy and paste.
+Over the last automation labs you have designed specific use cases: configuration compliance checking, event-driven responses, API-assisted change windows, and even a self-service portal. Each design focuses on a single problem. Your operations leadership now wants to understand **how it all fits together** in day-to-day network operations.
 
-Management is not asking for a full controller deployment on day one. Instead, they want you to propose and demonstrate a small but meaningful automation initiative that:
+You have been asked to produce an **automation-focused operations runbook** for the network team. This runbook should:
 
-- Uses basic Python or a similar scripting language where appropriate.
-- Works with structured data such as JSON or YAML.
-- Interacts with at least one API (for example Cisco DNA Center, vManage, or device level RESTCONF/NETCONF).
+- Summarise the automation patterns you have designed so far.  
+- Define when each pattern is appropriate and what its prerequisites are.  
+- Show how incidents, changes, and routine checks can make use of automation safely.  
+- Highlight where future investment in tooling or skills will have the most impact.
+
+This is the capstone for the automation track: you move from individual tools to an integrated way of working.
 
 ### Project Objectives
 
 By the end of this project you should be able to:
 
-- Read and reason about simple Python scripts that perform network tasks.  
-- Understand how JSON and YANG style data models structure configuration and state.  
-- Explain how APIs from Cisco DNA Center or vManage can be used to query and change the network.  
-- Interpret REST API responses, including codes and payload data.  
-- Describe where EEM applets or orchestration tools fit into your automation roadmap.
+- Describe a small portfolio of automation use cases suitable for an enterprise network team.  
+- Map each use case to the underlying technologies: Python, JSON, YANG, APIs, EEM, and orchestration tools.  
+- Define clear entry points for automation in incident response, change management, and routine maintenance.  
+- Propose a staged adoption plan that builds confidence and avoids over-automation.
 
 ### Technologies and Topics in Scope
 
-This project ties into the ENCOR Automation section:
+This project draws on the full Automation syllabus (6.x):
 
-- Basic Python components and scripts.  
-- JSON encoding and structured data.  
-- High level principles of YANG and data modelling.  
-- APIs for Cisco DNA Center and vManage.  
-- REST API codes and payloads using DNA Center or RESTCONF.  
-- EEM applets for configuration, troubleshooting, or data collection.  
-- Agent based and agentless orchestration tools such as Chef, Puppet, Ansible, and SaltStack.
+- **6.1 Python components and scripts** – as the glue for many workflows.  
+- **6.2 JSON encoded data** – to describe intent, inventory, and requests.  
+- **6.3 Data modelling with YANG** – to reason about configuration in a structured way.  
+- **6.4 and 6.5 APIs and REST responses** – for controllers and device-level access.  
+- **6.6 EEM applets** – for local event handling and data collection.  
+- **6.7 Orchestration tools** – for larger, multi-device changes and integrations.
 
 ### Project Tasks
 
-You do not need to write production quality code. The goal is to understand and explain an automation approach that could realistically be adopted by your team.
+1. **Catalogue your automation use cases**  
+   - List the concrete designs from earlier labs, for example:
+     - Configuration compliance checker.  
+     - Event-driven alerting and remediation.  
+     - API-driven change windows.  
+     - Self-service task portal.  
+   - For each, summarise:
+     - The problem it solves.  
+     - The main technologies it uses.  
+     - The current level of maturity (idea, prototype, or production-ready).
+2. **Define when to use which pattern**  
+   - Create guidance such as:
+     - Use the compliance checker for regular drift reports and pre-change assessments.  
+     - Use event-driven workflows for high-frequency, well-understood incidents.  
+     - Use API-driven change windows for planned, repeatable changes across many devices.  
+     - Use the self-service portal for low-risk tasks that benefit from delegation.  
+   - Note risks and prerequisites for each pattern (for example API access, test environment, skills).
+3. **Design the automation operations runbook**  
+   - Outline sections of the runbook, such as:
+     - \"Daily and weekly automated checks\".  
+     - \"Using automation during incident response\".  
+     - \"Planning changes with automation support\".  
+     - \"Requesting and reviewing new automation use cases\".  
+   - Describe what an on-call engineer should do with the outputs of each automated tool.
+4. **Plan metrics and feedback loops**  
+   - Decide how you will measure the impact of automation, for example:
+     - Reduction in time to resolve certain incident types.  
+     - Fewer configuration drift findings over time.  
+     - Decrease in manual ticket work for repetitive tasks.  
+   - Describe how engineers can propose improvements or report issues with automated workflows.
+5. **Outline a staged adoption roadmap**  
+   - Propose phases, such as:
+     - Phase 1: Read-only and reporting tools (compliance checks, data collection).  
+     - Phase 2: Limited, supervised write operations during change windows.  
+     - Phase 3: Event-driven actions with clear safeguards.  
+     - Phase 4: Carefully scoped self-service for selected teams.  
+   - For each phase, note training, documentation, and communication activities required.
 
-1. **Choose a simple but valuable use case**
-   - Examples:
-     - Collect basic inventory and interface status from all devices.  
-     - Roll out a new NTP or syslog configuration to a group of switches.  
-     - Check that certain ACLs or QoS policies are present and correctly configured.
-2. **Define your data model**
-   - Decide what information your script or tool needs (for example device IPs, roles, credentials, target NTP servers).  
-   - Represent that data in JSON or YAML. Make sure the structure is clear and easy to extend.
-3. **Select an interaction method**
-   - Option A: Use device level APIs (RESTCONF or NETCONF) to pull or push configuration snippets.  
-   - Option B: Use a controller API such as Cisco DNA Center or vManage to perform actions on your behalf.  
-   - Option C: Use SSH based libraries (for example in Python) as a first step while you explore APIs.
-4. **Sketch or read a Python script**
-   - Either write a small script yourself or find a simple example that:
-     - Reads your JSON or YAML inventory.  
-     - Connects to devices or a controller.  
-     - Performs your chosen task in a loop.  
-   - Make sure you understand each major part of the script: input, connection, action, and output.
-5. **Consider EEM and orchestration tools**
-   - Describe how an EEM applet could automate a very local task on a device (for example collecting logs when an interface flaps).  
-   - Compare this to what an orchestration tool like Ansible would do at scale.
+### Design Diagram (Text Form)
 
-### Validation and What-If Analysis
+Describe a high-level diagram of your automation ecosystem:
 
-Think through:
+- A \"Source of Events and Requests\" block (tickets, alerts, periodic schedules, self-service).  
+- An \"Automation Services\" block that groups your scripts, EEM applets, and orchestration tools.  
+- \"Controllers and Devices\" blocks where actual configuration and state live.  
+- A \"Runbook and Metrics\" block that guides engineers and tracks outcomes.
 
-- How you would test your automation safely (for example read only operations first, then small pilot groups).  
-- How you would roll back changes if something went wrong.  
-- How you would handle authentication and secrets securely as your scripts or tools grow.
+Show how incidents, changes, and routine checks flow through this ecosystem.
+
+### Failure and What-If Analysis
+
+Consider:
+
+- An automated tool produces incorrect or misleading results. How do you catch this and roll back trust in that tool until it is fixed.  
+- A new team member overestimates what is automated and assumes tasks are covered when they are not. How does the runbook set expectations.  
+- A critical dependency (for example a controller API or credentials store) is unavailable.
+
+For each case, describe:
+
+- The potential impact on operations.  
+- How documentation, training, and design choices reduce the risk.  
+- What immediate mitigation steps you would include in the runbook.
 
 ### Expected Outcomes
 
 After completing this project you should be able to:
 
-- Explain, in plain language, a small automation project that would help your team.  
-- Walk through a basic Python and JSON based workflow for that project.  
-- Describe how you would evolve this into a more robust solution using controllers, APIs, or orchestration tools.
+- Present an automation-focused operations runbook tailored to your environment.  
+- Explain how individual automation projects support broader operational goals.  
+- Guide your team through a realistic, low-risk journey from manual CLI to thoughtful automation.
 
 ### Reflection
 
 Reflect on:
 
-- Which tasks in your current environment are best suited to early automation.  
-- Which skills you and your team would need to develop to be comfortable with scripting and APIs.  
-- How you can build confidence and trust in automated changes by starting small and validating carefully.
+- Which parts of your current operations will benefit most from this integrated approach.  
+- Where you still have gaps in skills, tooling, or trust that need to be addressed.  
+- What your \"next three concrete steps\" are to move from design to implementation.
 

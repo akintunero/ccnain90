@@ -1,83 +1,101 @@
-## Advanced Automation Lab 44 – First Steps in Network Automation and APIs
+## Advanced Automation Lab 45 – Designing an Event-Driven Alerting and Remediation Workflow
 
 ### Scenario
-Your network team has been asked to "start using automation" to reduce repetitive work and improve consistency. Today, most changes are made by hand on the CLI. There is no clear inventory of which devices exist, and simple tasks such as pushing a new NTP server or updating an ACL require a lot of copy and paste.
+Your operations team spends a lot of time reacting to repeated issues: interfaces that flap at the same site every week, high CPU on a core switch during backups, or access points that regularly lose connectivity. Today, most of the response is manual. Someone notices a syslog message or an email alert and then logs in to run a few show commands.
 
-Management is not asking for a full controller deployment on day one. Instead, they want you to propose and demonstrate a small but meaningful automation initiative that:
+In this lab you will design an **event-driven automation workflow** that reacts to well understood triggers. Instead of trying to automate everything, you will:
 
-- Uses basic Python or a similar scripting language where appropriate.
-- Works with structured data such as JSON or YAML.
-- Interacts with at least one API (for example Cisco DNA Center, vManage, or device level RESTCONF/NETCONF).
+- Identify a small number of repeatable network events worth automating.  
+- Decide which of them can be handled locally with EEM applets.  
+- Decide which require centralised workflows using APIs or orchestration tools.  
+- Define how alerts, scripts, and human runbooks fit together.
+
+The goal is to reduce time to detection and time to basic triage without losing human oversight.
 
 ### Project Objectives
 
 By the end of this project you should be able to:
 
-- Read and reason about simple Python scripts that perform network tasks.  
-- Understand how JSON and YANG style data models structure configuration and state.  
-- Explain how APIs from Cisco DNA Center or vManage can be used to query and change the network.  
-- Interpret REST API responses, including codes and payload data.  
-- Describe where EEM applets or orchestration tools fit into your automation roadmap.
+- Describe how EEM can react to device events such as interface flaps or syslog messages.  
+- Explain how Python scripts or controller APIs can be triggered as part of a workflow.  
+- Compare when to use local event handlers versus central automation or orchestration.  
+- Sketch an end-to-end flow from event to alert, automated action, and human follow-up.
 
 ### Technologies and Topics in Scope
 
-This project ties into the ENCOR Automation section:
+This project focuses on the automation syllabus (6.x), especially:
 
-- Basic Python components and scripts.  
-- JSON encoding and structured data.  
-- High level principles of YANG and data modelling.  
-- APIs for Cisco DNA Center and vManage.  
-- REST API codes and payloads using DNA Center or RESTCONF.  
-- EEM applets for configuration, troubleshooting, or data collection.  
-- Agent based and agentless orchestration tools such as Chef, Puppet, Ansible, and SaltStack.
+- **6.1 Python components and scripts** – used for simple remediation or data collection.  
+- **6.2 JSON encoded data** – for passing structured information between tools.  
+- **6.3 YANG and models** – as a way to target specific state or configuration.  
+- **6.4 and 6.5 APIs and REST responses** – when calling controllers or RESTCONF endpoints.  
+- **6.6 EEM applets** – as local event-driven automation on network devices.  
+- **6.7 Orchestration tools** – to coordinate multi-device responses when needed.
 
 ### Project Tasks
 
-You do not need to write production quality code. The goal is to understand and explain an automation approach that could realistically be adopted by your team.
-
-1. **Choose a simple but valuable use case**
+1. **Select one or two high-value events**  
    - Examples:
-     - Collect basic inventory and interface status from all devices.  
-     - Roll out a new NTP or syslog configuration to a group of switches.  
-     - Check that certain ACLs or QoS policies are present and correctly configured.
-2. **Define your data model**
-   - Decide what information your script or tool needs (for example device IPs, roles, credentials, target NTP servers).  
-   - Represent that data in JSON or YAML. Make sure the structure is clear and easy to extend.
-3. **Select an interaction method**
-   - Option A: Use device level APIs (RESTCONF or NETCONF) to pull or push configuration snippets.  
-   - Option B: Use a controller API such as Cisco DNA Center or vManage to perform actions on your behalf.  
-   - Option C: Use SSH based libraries (for example in Python) as a first step while you explore APIs.
-4. **Sketch or read a Python script**
-   - Either write a small script yourself or find a simple example that:
-     - Reads your JSON or YAML inventory.  
-     - Connects to devices or a controller.  
-     - Performs your chosen task in a loop.  
-   - Make sure you understand each major part of the script: input, connection, action, and output.
-5. **Consider EEM and orchestration tools**
-   - Describe how an EEM applet could automate a very local task on a device (for example collecting logs when an interface flaps).  
-   - Compare this to what an orchestration tool like Ansible would do at scale.
+     - An access switch uplink that flaps more than three times in ten minutes.  
+     - CPU on a core switch exceeding a defined threshold for more than five minutes.  
+     - Repeated authentication failures on a management interface.  
+   - For each event, describe why it matters and what a human normally does in response.
+2. **Decide what can be automated locally**  
+   - For each event, ask:
+     - Can an EEM applet on the device safely collect extra information (for example show commands) or take a simple action (for example temporarily shut a non-critical interface).  
+     - What data should be logged or sent to a central system when the event fires.  
+   - Write a short description of at least one EEM-based response.
+3. **Design a central workflow**  
+   - For events that require a broader view (for example cross-device correlation), describe:
+     - Which system receives the initial alert (for example SIEM, NMS, controller).  
+     - How a Python script or orchestration tool might query APIs to gather more context.  
+     - What automated steps are safe to take, and where a human must approve changes.
+4. **Define data formats and interfaces**  
+   - Decide how information flows between components:
+     - What JSON payloads or fields are passed from EEM to a webhook or from a controller API to your script.  
+     - How REST API response codes influence the next step in the workflow.  
+   - Document the minimum fields needed for an engineer to understand what happened.
+5. **Document the full runbook**  
+   - For your main example event, write a step-by-step runbook that includes:
+     - The original trigger and how it is detected.  
+     - Any local EEM actions and what they record.  
+     - Any central automation steps and the data they gather.  
+     - The point where a human engineer reviews the situation and decides on final remediation.
 
-### Validation and What-If Analysis
+### Design Diagram (Text Form)
 
-Think through:
+Describe a logical diagram for your event-driven workflow:
 
-- How you would test your automation safely (for example read only operations first, then small pilot groups).  
-- How you would roll back changes if something went wrong.  
-- How you would handle authentication and secrets securely as your scripts or tools grow.
+- A "Device" block where the event occurs and where EEM may run.  
+- An "Event Bus or Alerting" block that receives syslog or SNMP traps.  
+- An "Automation" block that runs Python scripts or orchestration playbooks using APIs.  
+- An "Engineer" block that receives summarised alerts and decides on final action.
+
+Show arrows that indicate the sequence from event to EEM, to central automation, to human review.
+
+### Failure and What-If Analysis
+
+Consider and document:
+
+- What happens if an EEM applet misfires or takes an action on the wrong interface. How would you limit the scope of automated actions.  
+- What if the central automation platform is unavailable when an event occurs. How should devices behave in that case.  
+- How you avoid "alert storms" by consolidating events or applying rate limits.
+
+For each scenario, describe the risk, detection method, and design choices that reduce impact.
 
 ### Expected Outcomes
 
 After completing this project you should be able to:
 
-- Explain, in plain language, a small automation project that would help your team.  
-- Walk through a basic Python and JSON based workflow for that project.  
-- Describe how you would evolve this into a more robust solution using controllers, APIs, or orchestration tools.
+- Explain an event-driven automation design that balances speed and safety.  
+- Show how EEM, APIs, and orchestration tools can work together rather than in isolation.  
+- Provide a clear runbook that operations teams can use to adopt this workflow.
 
 ### Reflection
 
 Reflect on:
 
-- Which tasks in your current environment are best suited to early automation.  
-- Which skills you and your team would need to develop to be comfortable with scripting and APIs.  
-- How you can build confidence and trust in automated changes by starting small and validating carefully.
+- Which current alerts in your environment would most benefit from basic automation.  
+- Where you are comfortable allowing automated actions and where you insist on human approval.  
+- How you would introduce this workflow in stages to build trust with the operations team.
 

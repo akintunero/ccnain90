@@ -1,83 +1,110 @@
-## Advanced Automation Lab 44 – First Steps in Network Automation and APIs
+## Advanced Automation Lab 47 – Building a Simple Self-Service Network Task Portal
 
 ### Scenario
-Your network team has been asked to "start using automation" to reduce repetitive work and improve consistency. Today, most changes are made by hand on the CLI. There is no clear inventory of which devices exist, and simple tasks such as pushing a new NTP server or updating an ACL require a lot of copy and paste.
+Your network team is frequently interrupted by small, repetitive requests from other teams:
 
-Management is not asking for a full controller deployment on day one. Instead, they want you to propose and demonstrate a small but meaningful automation initiative that:
+- \"Can you add this MAC address to the wired allow-list.\"  
+- \"Can you open this port to a test server for two hours.\"  
+- \"Can you move this access port into the guest VLAN for a workshop.\"  
 
-- Uses basic Python or a similar scripting language where appropriate.
-- Works with structured data such as JSON or YAML.
-- Interacts with at least one API (for example Cisco DNA Center, vManage, or device level RESTCONF/NETCONF).
+Each request is handled manually through tickets and ad-hoc CLI changes. Nothing prevents mistakes, and there is no easy way to expire temporary changes automatically.
+
+Management wants you to explore the idea of a **self-service network task portal** that exposes a few tightly controlled operations to other teams. In this lab you will design the backend automation for such a portal, with a focus on **safety, approvals, and auditability**, not front-end code.
 
 ### Project Objectives
 
 By the end of this project you should be able to:
 
-- Read and reason about simple Python scripts that perform network tasks.  
-- Understand how JSON and YANG style data models structure configuration and state.  
-- Explain how APIs from Cisco DNA Center or vManage can be used to query and change the network.  
-- Interpret REST API responses, including codes and payload data.  
-- Describe where EEM applets or orchestration tools fit into your automation roadmap.
+- Identify one or two narrow network tasks that are safe to expose as self-service.  
+- Describe how those tasks can be implemented using Python, JSON, and APIs or orchestration tools.  
+- Define guardrails: validation, approvals, and automatic expiry of temporary changes.  
+- Explain how requests, actions, and results are logged for audit and troubleshooting.
 
 ### Technologies and Topics in Scope
 
-This project ties into the ENCOR Automation section:
+This project is rooted in the Automation syllabus (6.x):
 
-- Basic Python components and scripts.  
-- JSON encoding and structured data.  
-- High level principles of YANG and data modelling.  
-- APIs for Cisco DNA Center and vManage.  
-- REST API codes and payloads using DNA Center or RESTCONF.  
-- EEM applets for configuration, troubleshooting, or data collection.  
-- Agent based and agentless orchestration tools such as Chef, Puppet, Ansible, and SaltStack.
+- **6.1 Python components and scripts** – to implement the backend logic for self-service tasks.  
+- **6.2 JSON encoded data** – to represent requests, parameters, and results.  
+- **6.3 YANG and models** – to understand what objects your portal is allowed to touch.  
+- **6.4 and 6.5 APIs and REST responses** – to apply changes via controllers or RESTCONF.  
+- **6.6 EEM applets** – optionally to enforce local safeguards or time-based actions.  
+- **6.7 Orchestration tools** – as an alternative engine behind the portal for more complex tasks.
 
 ### Project Tasks
 
-You do not need to write production quality code. The goal is to understand and explain an automation approach that could realistically be adopted by your team.
-
-1. **Choose a simple but valuable use case**
+1. **Select candidate self-service tasks**  
+   - Choose one or two operations that:
+     - Are frequent and well-understood.  
+     - Have clear boundaries (for example only a specific VLAN or ACL).  
+     - Can be reversed without major impact.  
    - Examples:
-     - Collect basic inventory and interface status from all devices.  
-     - Roll out a new NTP or syslog configuration to a group of switches.  
-     - Check that certain ACLs or QoS policies are present and correctly configured.
-2. **Define your data model**
-   - Decide what information your script or tool needs (for example device IPs, roles, credentials, target NTP servers).  
-   - Represent that data in JSON or YAML. Make sure the structure is clear and easy to extend.
-3. **Select an interaction method**
-   - Option A: Use device level APIs (RESTCONF or NETCONF) to pull or push configuration snippets.  
-   - Option B: Use a controller API such as Cisco DNA Center or vManage to perform actions on your behalf.  
-   - Option C: Use SSH based libraries (for example in Python) as a first step while you explore APIs.
-4. **Sketch or read a Python script**
-   - Either write a small script yourself or find a simple example that:
-     - Reads your JSON or YAML inventory.  
-     - Connects to devices or a controller.  
-     - Performs your chosen task in a loop.  
-   - Make sure you understand each major part of the script: input, connection, action, and output.
-5. **Consider EEM and orchestration tools**
-   - Describe how an EEM applet could automate a very local task on a device (for example collecting logs when an interface flaps).  
-   - Compare this to what an orchestration tool like Ansible would do at scale.
+     - Assigning a port to a pre-approved guest VLAN.  
+     - Creating a temporary ACL entry for a specific source and destination.  
+2. **Define the request and approval model**  
+   - Design a JSON structure for a self-service request, including:
+     - Requester identity and team.  
+     - Task type (for example \"guest-port\" or \"temporary-acl\").  
+     - Parameters (for example port ID, MAC address, IPs, ports, duration).  
+   - Decide which requests require explicit approval and who approves them.
+3. **Design the automation backend**  
+   - Describe how a Python script or orchestration playbook will:
+     - Validate the request against allowed ranges and policies.  
+     - Call controller or device APIs to implement the change.  
+     - Schedule or trigger expiry actions if the change is temporary.  
+   - Include how REST API responses are checked and how errors are surfaced back to the requester.
+4. **Plan logging and audit trails**  
+   - Specify what must be logged for each request:
+     - Who asked for the change and when.  
+     - What was changed and on which devices.  
+     - When the change was reverted (if temporary).  
+   - Decide where logs are stored (for example syslog, SIEM, or a simple database) and how they are searched during investigations.
+5. **Outline a user-facing workflow**  
+   - Without writing UI code, describe:
+     - How a user submits a request (for example web form, chat bot, or ticket integration).  
+     - How they see whether their request is pending, approved, or completed.  
+     - What feedback they get if validation fails or the action cannot be completed.
 
-### Validation and What-If Analysis
+### Design Diagram (Text Form)
 
-Think through:
+Describe an architectural view of the self-service portal:
 
-- How you would test your automation safely (for example read only operations first, then small pilot groups).  
-- How you would roll back changes if something went wrong.  
-- How you would handle authentication and secrets securely as your scripts or tools grow.
+- A \"User\" block representing requesters in other teams.  
+- A \"Request API\" block that accepts JSON payloads from a simple UI or integration.  
+- An \"Approval\" block where requests are reviewed if needed.  
+- An \"Automation Engine\" block running Python or orchestration playbooks.  
+- \"Network\" blocks (controllers and devices) where changes are applied.  
+- A \"Logging and Audit\" block that records all actions and outcomes.
+
+Show the flow from request to approval, to automation action, to confirmation and expiry.
+
+### Failure and What-If Analysis
+
+Consider:
+
+- A request is malformed or outside allowed policy (for example a port outside the permitted range). How is this rejected and reported.  
+- The automation engine partially applies a change before an error occurs. How do you detect and correct this.  
+- A temporary change is not reverted on time because of a failure in the expiry mechanism.
+
+For each case, describe:
+
+- The impact on users and on the network.  
+- How your design detects the issue and what automated or manual recovery steps exist.  
+- What additional safeguards you might add before going into production.
 
 ### Expected Outcomes
 
 After completing this project you should be able to:
 
-- Explain, in plain language, a small automation project that would help your team.  
-- Walk through a basic Python and JSON based workflow for that project.  
-- Describe how you would evolve this into a more robust solution using controllers, APIs, or orchestration tools.
+- Present a realistic design for a small self-service network task portal.  
+- Explain how automation, approvals, and logging work together to keep it safe.  
+- Identify which tasks in your own environment could be on-boarded first.
 
 ### Reflection
 
 Reflect on:
 
-- Which tasks in your current environment are best suited to early automation.  
-- Which skills you and your team would need to develop to be comfortable with scripting and APIs.  
-- How you can build confidence and trust in automated changes by starting small and validating carefully.
+- How comfortable your organisation is with delegating limited control to other teams.  
+- What cultural or process changes are needed to support self-service safely.  
+- How you would pilot this idea with a small group of users before scaling up.
 

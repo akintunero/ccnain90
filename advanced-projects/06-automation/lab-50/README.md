@@ -1,83 +1,111 @@
-## Advanced Automation Lab 44 – First Steps in Network Automation and APIs
+## Advanced Automation Lab 50 – Automation Strategy and Skills Roadmap (Final Capstone)
 
 ### Scenario
-Your network team has been asked to "start using automation" to reduce repetitive work and improve consistency. Today, most changes are made by hand on the CLI. There is no clear inventory of which devices exist, and simple tasks such as pushing a new NTP server or updating an ACL require a lot of copy and paste.
+Your organisation has decided that network automation is a strategic priority. You now have several concrete designs on the table:
 
-Management is not asking for a full controller deployment on day one. Instead, they want you to propose and demonstrate a small but meaningful automation initiative that:
+- A configuration compliance checker.  
+- Event-driven alerting and remediation.  
+- API-driven change windows.  
+- A self-service task portal.  
+- An orchestration platform evaluation.
 
-- Uses basic Python or a similar scripting language where appropriate.
-- Works with structured data such as JSON or YAML.
-- Interacts with at least one API (for example Cisco DNA Center, vManage, or device level RESTCONF/NETCONF).
+Leadership is asking a bigger question: **\"What is our five-step plan to become an automation-enabled network team over the next 12–24 months?\"** They want a strategy that balances technology, process, and skills, without putting the production network at unnecessary risk.
+
+In this final capstone you will build an **automation strategy and skills roadmap** that ties all previous labs together and sets direction for the team.
 
 ### Project Objectives
 
 By the end of this project you should be able to:
 
-- Read and reason about simple Python scripts that perform network tasks.  
-- Understand how JSON and YANG style data models structure configuration and state.  
-- Explain how APIs from Cisco DNA Center or vManage can be used to query and change the network.  
-- Interpret REST API responses, including codes and payload data.  
-- Describe where EEM applets or orchestration tools fit into your automation roadmap.
+- Articulate a clear vision for how automation will change day-to-day network operations.  
+- Prioritise automation initiatives based on value, risk, and readiness.  
+- Define the skills, roles, and training your team needs at each stage.  
+- Propose governance practices that keep automation safe, auditable, and maintainable.
 
 ### Technologies and Topics in Scope
 
-This project ties into the ENCOR Automation section:
+This project draws from all elements of the Automation syllabus (6.x), but the focus is on **planning and integration** rather than new tools:
 
-- Basic Python components and scripts.  
-- JSON encoding and structured data.  
-- High level principles of YANG and data modelling.  
-- APIs for Cisco DNA Center and vManage.  
-- REST API codes and payloads using DNA Center or RESTCONF.  
-- EEM applets for configuration, troubleshooting, or data collection.  
-- Agent based and agentless orchestration tools such as Chef, Puppet, Ansible, and SaltStack.
+- Python, JSON, and YANG as core building blocks.  
+- APIs (controllers and device-level) as primary interfaces.  
+- EEM and orchestration platforms as execution engines.  
+- Documentation, version control, and testing as foundations for trust.
 
 ### Project Tasks
 
-You do not need to write production quality code. The goal is to understand and explain an automation approach that could realistically be adopted by your team.
+1. **State the current baseline**  
+   - Describe your starting point in terms of:
+     - How changes are performed today (manual CLI, scripts, some automation).  
+     - What monitoring and logging exists.  
+     - Current skill levels with Python, APIs, and automation tools.  
+   - List key pain points that automation should help with (for example change errors, slow rollouts, lack of visibility).
+2. **Define the target vision**  
+   - In one or two pages, describe what \"automation-enabled networking\" looks like for you, for example:
+     - Most routine checks and reports are automated.  
+     - Standard changes are executed via APIs or orchestration tools with pre/post checks.  
+     - Engineers use a shared automation repository with review and testing.  
+   - Make sure this vision is realistic for a CCNA-level environment, not a full software development shop.
+3. **Design a phased roadmap**  
+   - Propose at least four phases, such as:
+     - Phase 1: Read-only automation (inventory, compliance, reporting).  
+     - Phase 2: Assisted change windows using APIs and scripts.  
+     - Phase 3: Event-driven automation for a small set of well-understood incidents.  
+     - Phase 4: Carefully scoped orchestration and self-service for selected tasks.  
+   - For each phase, list:
+     - Goals and success metrics.  
+     - Prerequisite tools and skills.  
+     - Clear \"do not automate yet\" boundaries.
+4. **Create a skills and roles plan**  
+   - Identify:
+     - Which skills every network engineer should have (for example reading simple Python, understanding JSON and APIs).  
+     - Which skills belong to a smaller group of automation champions (for example writing scripts, designing playbooks).  
+     - How you will deliver training (internal sessions, labs, external courses).  
+   - Suggest how responsibilities for maintaining automation content will be shared and reviewed.
+5. **Define governance and safety practices**  
+   - Document how you will:
+     - Use version control for scripts and playbooks.  
+     - Review and test automation before production use.  
+     - Handle credentials and access rights securely.  
+     - Respond when automation behaves unexpectedly (for example temporary rollback to manual processes).
 
-1. **Choose a simple but valuable use case**
-   - Examples:
-     - Collect basic inventory and interface status from all devices.  
-     - Roll out a new NTP or syslog configuration to a group of switches.  
-     - Check that certain ACLs or QoS policies are present and correctly configured.
-2. **Define your data model**
-   - Decide what information your script or tool needs (for example device IPs, roles, credentials, target NTP servers).  
-   - Represent that data in JSON or YAML. Make sure the structure is clear and easy to extend.
-3. **Select an interaction method**
-   - Option A: Use device level APIs (RESTCONF or NETCONF) to pull or push configuration snippets.  
-   - Option B: Use a controller API such as Cisco DNA Center or vManage to perform actions on your behalf.  
-   - Option C: Use SSH based libraries (for example in Python) as a first step while you explore APIs.
-4. **Sketch or read a Python script**
-   - Either write a small script yourself or find a simple example that:
-     - Reads your JSON or YAML inventory.  
-     - Connects to devices or a controller.  
-     - Performs your chosen task in a loop.  
-   - Make sure you understand each major part of the script: input, connection, action, and output.
-5. **Consider EEM and orchestration tools**
-   - Describe how an EEM applet could automate a very local task on a device (for example collecting logs when an interface flaps).  
-   - Compare this to what an orchestration tool like Ansible would do at scale.
+### Design Diagram (Text Form)
 
-### Validation and What-If Analysis
+Describe a high-level \"automation strategy\" diagram:
 
-Think through:
+- A timeline with your roadmap phases.  
+- A \"People and Skills\" layer showing how capability grows over time.  
+- A \"Tools and Platforms\" layer showing when controllers, orchestration, and portals are introduced.  
+- A \"Use Cases\" layer highlighting which problems are tackled in each phase.
 
-- How you would test your automation safely (for example read only operations first, then small pilot groups).  
-- How you would roll back changes if something went wrong.  
-- How you would handle authentication and secrets securely as your scripts or tools grow.
+Use this as a visual aid when presenting your plan to leadership or peers.
+
+### Failure and What-If Analysis
+
+Consider:
+
+- The roadmap moves too fast and engineers feel overwhelmed or bypassed.  
+- Automation projects stall because there is no dedicated time or ownership.  
+- A high-profile automation error reduces trust in the whole programme.
+
+For each case, describe:
+
+- Early warning signs that the strategy needs adjustment.  
+- Mitigations built into your plan (for example pilots, staged rollouts, clear fallback paths).  
+- How you will communicate openly about risks and lessons learned.
 
 ### Expected Outcomes
 
 After completing this project you should be able to:
 
-- Explain, in plain language, a small automation project that would help your team.  
-- Walk through a basic Python and JSON based workflow for that project.  
-- Describe how you would evolve this into a more robust solution using controllers, APIs, or orchestration tools.
+- Present a coherent, phased automation strategy to technical and non-technical stakeholders.  
+- Show how the individual labs and designs in this track support that strategy.  
+- Give your team a concrete, realistic path from where they are today to an automation-enabled future.
 
 ### Reflection
 
 Reflect on:
 
-- Which tasks in your current environment are best suited to early automation.  
-- Which skills you and your team would need to develop to be comfortable with scripting and APIs.  
-- How you can build confidence and trust in automated changes by starting small and validating carefully.
+- What excites you most and what worries you most about this roadmap.  
+- Which single next step would deliver the most value with the least risk.  
+- How you will keep the roadmap alive as a living document rather than a one-time exercise.
 
