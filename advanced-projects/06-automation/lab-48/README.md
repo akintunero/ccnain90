@@ -23,7 +23,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Topics in Scope
 
-This project draws on the full Automation syllabus (6.x):
+This project draws on the full Automation  (6.x):
 
 - **6.1 Python components and scripts** – as the glue for many workflows.  
 - **6.2 JSON encoded data** – to describe intent, inventory, and requests.  

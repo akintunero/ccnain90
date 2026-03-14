@@ -23,7 +23,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Topics in Scope
 
-This project focuses on the automation syllabus (6.x), especially:
+This project focuses on the automation  (6.x), especially:
 
 - **6.1 Python components and scripts** – used for simple remediation or data collection.  
 - **6.2 JSON encoded data** – for passing structured information between tools.  

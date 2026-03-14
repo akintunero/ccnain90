@@ -22,7 +22,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Topics in Scope
 
-This project is rooted in the Automation syllabus (6.x):
+This project is rooted in the Automation  (6.x):
 
 - **6.1 Python components and scripts** – to implement the backend logic for self-service tasks.  
 - **6.2 JSON encoded data** – to represent requests, parameters, and results.  

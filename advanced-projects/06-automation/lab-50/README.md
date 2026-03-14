@@ -24,7 +24,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Topics in Scope
 
-This project draws from all elements of the Automation syllabus (6.x), but the focus is on **planning and integration** rather than new tools:
+This project draws from all elements of the Automation  (6.x), but the focus is on **planning and integration** rather than new tools:
 
 - Python, JSON, and YANG as core building blocks.  
 - APIs (controllers and device-level) as primary interfaces.  

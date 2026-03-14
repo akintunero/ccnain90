@@ -18,7 +18,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Topics in Scope
 
-This project emphasises part of the Automation syllabus (6.7) while tying in earlier topics:
+This project emphasises part of the Automation  (6.7) while tying in earlier topics:
 
 - **6.7 Orchestration tools** – comparing and positioning tools such as Ansible, Chef, Puppet, and SaltStack.  
 - **6.1 Python components and scripts** – as building blocks that may be reused within orchestration workflows.  

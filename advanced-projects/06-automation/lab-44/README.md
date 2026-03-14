@@ -24,7 +24,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Design Topics in Scope
 
-This project draws from the Automation section of the syllabus (6.x):
+This project draws from the Automation section:
 
 - **6.1 Python components and scripts**  
   Reading and explaining simple Python used for state collection and comparison.  
@@ -137,7 +137,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Topics in Scope
 
-This project draws from the Automation section of the syllabus (6.x):
+This project draws from the Automation section:
 
 - **6.1 Python components and scripts**
   - Interpreting basic Python constructs used in network automation.
