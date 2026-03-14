@@ -1,4 +1,4 @@
-## Advanced Architecture Lab 01 – Dual Stack Campus and Branch Design
+## Advanced Architecture Lab 4 – Dual Stack Campus and Branch Design
 
 ### Scenario
 You are the lead network engineer for a fast growing company that has:
@@ -15,6 +15,9 @@ The current network is a single Layer 2 domain with a basic router for internet 
 
 Your task is to propose a realistic campus and WAN **architecture** that could be implemented over several phases.
 
+This lab focuses on introducing Cisco Catalyst SD-WAN at the WAN edge and mapping its control and data planes into your campus and branch design.
+
+
 ### Project Objectives
 
 By the end of this project you should be able to:
@@ -27,22 +30,19 @@ By the end of this project you should be able to:
 
 ### Technologies and Design Topics in Scope
 
-This project maps directly to the ENCOR Architecture section:
+This project draws from the Architecture section of the syllabus (1.x):
 
-- **Enterprise network design**  
-  Tiered campus (tier 2 or tier 3), fabric concepts, and capacity planning.
-- **High availability techniques**  
-  Redundancy, FHRP, and supervisor or device level failover concepts.
-- **WLAN design principles**  
-  Centralised vs distributed controllers, remote branch options, and location services.
-- **On premises vs cloud**  
-  Where control planes and management should live.
-- **SD-WAN and SD-Access principles**  
-  Control and data plane elements and how they differ from traditional WAN and campus.
-- **Wired and wireless QoS**  
-  Core components and policy placement points.
-- **Hardware vs software forwarding**  
-  Where CEF and TCAM resources matter in the design.
+- **1.1 Enterprise design principles**
+  - 1.1.a High-level enterprise designs: 2-tier, 3-tier, fabric, and cloud-connected campuses.
+  - 1.1.b High availability techniques: redundancy, FHRP, and SSO in campus and WAN designs.
+- **1.2 Cisco Catalyst SD-WAN working principles**
+  - 1.2.a SD-WAN control and data plane elements and how they change WAN design.
+  - 1.2.b Benefits and limitations of the Catalyst SD-WAN solution for different site types.
+- **1.3 Cisco SD-Access working principles**
+  - 1.3.a SD-Access control and data plane elements and fabric roles.
+  - 1.3.b How a traditional campus interoperates with SD-Access during migration.
+- **1.4 QoS interpretation**
+  - Interpreting QoS configurations and policies as they apply across campus, WAN edge, and fabric.
 
 ### Project Tasks
 
