@@ -17,13 +17,13 @@ This lab is a capstone: you synthesise the security topics from earlier labs int
 By the end of this project you should be able to:
 
 - Produce a high-level security architecture document that covers device access, infrastructure, wireless, and network access control.
-- Build an audit-style checklist that maps controls to syllabus areas (device access, AAA, ACLs, CoPP, wireless, 802.1X/MAB/WebAuth, monitoring).
+- Build an audit-style checklist that maps controls to  areas (device access, AAA, ACLs, CoPP, wireless, 802.1X/MAB/WebAuth, monitoring).
 - Explain how each control supports the others and where single points of failure or gaps exist.
 - Propose a short "audit readiness" plan: evidence to collect, owners, and review frequency.
 
 ### Technologies and Design Topics in Scope
 
-This project draws from the full Security section of the syllabus (5.x) as a capstone:
+This project draws from the full Security section as a capstone:
 
 - **5.1 Device access control** – lines, passwords, AAA as the foundation for audit evidence.
 - **5.2 Infrastructure security features** – ACLs and CoPP and how they are documented.

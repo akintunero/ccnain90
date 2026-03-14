@@ -20,7 +20,7 @@ By the end of this project you should be able to:
 
 ### Technologies and Topics in Scope
 
-This project draws from the Security section of the syllabus (5.x):
+This project draws from the Security section:
 
 - **5.4 Components of network security design**
   - 5.4.a Threat defence.  
